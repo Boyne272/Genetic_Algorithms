@@ -6,6 +6,7 @@ public:
 	// default
 	CUnit();
 	int conc_num;
+	void reset_contents();
 	//index of the unit to which this unit’s concentrate stream is connected 
 	int tail_num;
 	int id;// id num of the cunit.
@@ -15,8 +16,8 @@ public:
 	// need a send func. all the sends must come at the same time
 	// index 0 is gormanium 
 	// index 1 is waste
-	double conc_send;
-	double tail_send;
+	double conc_send[2];
+	double tail_send[2];
 	double contents[2];
 
 	void calc_yield();
