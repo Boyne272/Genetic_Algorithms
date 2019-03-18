@@ -1,4 +1,4 @@
 #include "Header.h"
-#include "genetic_algorithm.h"
+#include "Genetic_Algorithm.h"
 
 // wrrite the function here
