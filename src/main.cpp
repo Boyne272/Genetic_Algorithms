@@ -23,8 +23,8 @@ int main(int argc, char *argv[]) {
 	file.close();
 	
 		// read in the system size
-	getline(ss, buffer, ',');
-	const int system_size = stoi(buffer);
+	//getline(ss, buffer, ',');
+	//const int system_size = stoi(buffer);
 	
 		// here is where we do things
 	
