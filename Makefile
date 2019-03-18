@@ -23,7 +23,7 @@ all: Genetic_Algorithm
 
 Genetic_Algorithm: $(BIN_DIR)/Genetic_Algorithm
 
-$(BIN_DIR)/Genetic_Algorithm: $(BUILD_DIR)/main.o $(BUILD_DIR)/genetic_algorithm.o $(BUILD_DIR)/Cunit.o $(BUILD_DIR)/circuit.o 
+$(BIN_DIR)/Genetic_Algorithm: $(BUILD_DIR)/main.o $(BUILD_DIR)/Genetic_Algorithm.o $(BUILD_DIR)/Cunit.o $(BUILD_DIR)/circuit.o 
 	$(CXX) -o $@ $^
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp $(INCLUDE_DIR)/*.h | directories
