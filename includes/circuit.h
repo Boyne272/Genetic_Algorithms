@@ -1,5 +1,5 @@
 #include "header.h"
-#include "Cunit.h"
+#include "cunit.h"
 
 class circuit {
 public:
