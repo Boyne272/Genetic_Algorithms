@@ -17,10 +17,10 @@ int main(int argc, char *argv[]) {
 	//	throw input + " not found";
 	
 		// load the file
-	stringstream ss;
-	string buffer;
-	ss << file.rdbuf();
-	file.close();
+	//stringstream ss;
+	//string buffer;
+	//ss << file.rdbuf();
+	//file.close();
 	
 		// read in the system size
 	//getline(ss, buffer, ',');
