@@ -27,7 +27,7 @@ $(BIN_DIR)/Genetic_Algorithm: $(BUILD_DIR)/main.o $(BUILD_DIR)/Genetic_Algorithm
 	$(CXX) -o $@ $^
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp $(INCLUDE_DIR)/*.h | directories
-	$(CXX) $(CPPFLAGS) -o $@ -c $< $(CXXFLAGS) -I$(INCLUDE_DIR)
+	$(CXX) $(CPPFLAGS) -o $@ -c $< $(CXXFLAGS) -I $(INCLUDE_DIR)
 
 # clean away previously made versions
 clean:
@@ -77,7 +77,7 @@ $(TEST_BIN_DIR)/test_validate: $(TEST_BUILD_DIR)/test_validate.o #$(BUILD_DIR)/a
 # build test files in test_build_direct with the .cpp file in test_dir
 # and include all header files (also ensure the test_directories exist)
 $(TEST_BUILD_DIR)/%.o: $(TEST_DIR)/%.cpp $(INCLUDE_DIR)/*.h | test_directories
-	$(CXX) -o $@ -c $< $(CXXFLAGS) $(CPPFLAGS) -I$(INCLUDE_DIR)
+	$(CXX) -o $@ -c $< $(CXXFLAGS) $(CPPFLAGS) -I $(INCLUDE_DIR)
 
 
 # make the test files and run test python script
