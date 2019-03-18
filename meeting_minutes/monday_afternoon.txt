@@ -32,4 +32,11 @@ Ye/Leo 			- Validation
 
 
 Rough Schedule:
-	- 
+	- Wade/UG 		- get the stucture of genetic algoithm and create the test fitness generator
+					- maybe get the basic structure done
+	- Gareth/Hamaed - midday tomorrow cuircut running
+					- by end of today subclass made and some kind of structure done
+	- Leo/Luna 		- familairaise with validation function
+					- hope to have generic function by end of today
+	- Richard 		- understand more of the makefiles
+					- make a test file template for each test file
