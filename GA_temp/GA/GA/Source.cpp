@@ -4,8 +4,8 @@
 #include <time.h>
 #include <iostream>
 
-#define N 21
-#define SIZE 100
+#define N 21                  //21 CELLS
+#define SIZE 100              //100 CHROMS
 
 using namespace std;
 
@@ -18,9 +18,8 @@ typedef struct Chrom
 }chrom;
 
 // function define
-void *initialize(chrom popcurrent[SIZE]);//进行种群的初始化
-int fitness(chrom x);
-void *pickchroms(chrom popcurrent[SIZE]);//选择操作
+void *initialize(chrom popcurrent[SIZE]);
+int fitness(chrom popcurrent[SIZE]);
 void *pickchroms_new(chrom popcurrent[SIZE]); // 基于概率分布
 void *crossover(chrom popnext[SIZE]);//交叉操作
 void *mutation(chrom popnext[SIZE]);//突变
@@ -46,21 +45,16 @@ void main()
 
 	for (i = 0; i < num; i++)                        //start iteration
 	{
-		cout << i << endl;
 
 		for (j = 0; j < SIZE; j++)
-		{
-			popnext[j] = popcurrent[j];           // 更新种群；
-		}
+			popnext[j] = popcurrent[j];           // update the popnext to date
 
-		pickchroms(popnext);                    // 挑选优秀个体；
-		crossover(popnext);                     // 交叉得到新个体；
-		mutation(popnext);                      // 变异得到新个体；
+		pickchroms_new(popnext);                    // pick a good parent
+		crossover(popnext);                     // do crossover
+		mutation(popnext);                      // do mutation
 
 		for (j = 0; j < SIZE; j++)
-		{
-			popcurrent[j] = popnext[j];              // 种群更替；
-		}
+			popcurrent[j] = popnext[j];                // update all chrom
 
 	}  // 等待迭代终止；
 //对于真正随机数是需要注意取较大的迭代次数
@@ -69,7 +63,6 @@ void main()
 		if (popcurrent[l].fit > Max)
 		{
 			Max = popcurrent[l].fit;
-			k = x(popcurrent[l]);//此时的value即为所求的x值
 		}
 
 	}
@@ -95,106 +88,60 @@ void *initialize(chrom popcurrent[SIZE])    // generate random initial populatio
 			popcurrent[j].bit[i] = random;
 		}
 
-		popcurrent[j].fit = fitness(popcurrent); // 计算染色体的适应度值
+		popcurrent[j].fit = fitness(popcurrent);  // calculate the fitness value of a chrom
 		sum = sum + popcurrent[j].fit;
-		printf("\n popcurrent[%d]=%d%d%d%d%d%d  value=%d  fitness = %d", j, popcurrent[j].bit[5], popcurrent[j].bit[4], popcurrent[j].bit[3], popcurrent[j].bit[2], popcurrent[j].bit[1], popcurrent[j].bit[0], value1, popcurrent[j].fit);
-		// 输出整条染色体的编码情况，
 	}
-	//计算适应值得百分比，该参数是在用轮盘赌选择法时需要用到的
-	for (j = 0; j < 4; j++)
+
+	for (j = 0; j < N; j++)
 	{
-		popcurrent[j].rfit = popcurrent[j].fit / sum;
-		popcurrent[j].cfit = 0;//将其初始化为0
+		popcurrent[j].rfit = popcurrent[j].fit / sum;  // calculate relative fitness value, which will be used to choose parents
+		popcurrent[j].cfit = 0;                        // init to zero
 	}
 	return(0);
 }
 
-
-
-//需要能能够从外部直接传输函数，加强鲁棒性
-int fitness(chrom popcurrent)    // get the fitness
+int fitness(chrom popcurrent[SIZE])    // get the fitness
 {
 	int y;
-	y = -(popcurrent.bit[0] * popcurrent.bit[0]) + 5;
+	y = -(popcurrent[0].bit[0] * popcurrent[0].bit[0]) + 5;
 	return(y);
 }
-//基于轮盘赌选择方法，进行基因型的选择
-void *pickchroms_new(chrom popnext[SIZE])//计算概率
+
+//pick a chrom base on fitness value choose next populartion
+void *pickchroms_new(chrom popnext[SIZE])
 {
-	int men;
 	int i; int j;
 	double p;
 	double sum = 0.0;
 	//find the total fitness of the population
-	for (men = 0; men < 4; men++)
-	{
-		sum = sum + popnext[men].fit;
-	}
+	for (i = 0; i < SIZE; i++)
+		sum = sum + popnext[i].fit;
 	//calculate the relative fitness of each member
-	for (men = 0; men < 4; men++)
-	{
-		popnext[men].rfit = popnext[men].fit / sum;
-	}
-	//calculate the cumulative fitness,即计算积累概率
+	for (i = 0; i < SIZE; i++)
+		popnext[i].rfit = popnext[i].fit / sum;
+	//calculate the cumulative fitness
 	popcurrent[0].cfit = popcurrent[0].rfit;
-	for (men = 1; men < 4; men++)
+	for (i = 1; i < SIZE; i++)
+		popnext[i].cfit = popnext[i - 1].cfit + popnext[i].rfit;
+	for (i = 0; i < SIZE; i++)
 	{
-		popnext[men].cfit = popnext[men - 1].cfit + popnext[men].rfit;
-	}
-
-	for (i = 0; i < 4; i++)
-	{//产生0~1之间的随机数
-		//p = r8_uniform_ab ( 0, 1, seed );//通过函数生成0~1之间均匀分布的数字
-		p = rand() % 10;//
+		//p = r8_uniform_ab ( 0, 1, seed ); // GENERATE RANDOM NUMBER BETWEEN 0 TO 1
+		p = rand() % 10;
 		p = p / 10;
 		if (p < popnext[0].cfit)
-		{
 			popcurrent[i] = popnext[0];
-		}
 		else
-		{
-			for (j = 0; j < 4; j++)
-			{
+			for (j = 0; j < SIZE; j++)
 				if (popnext[j].cfit <= p && p < popnext[j + 1].cfit)
 				{
-					popcurrent[i] = popcurrent[j + 1];
+					popcurrent[i] = popcurrent[j + 1];                     // todo, here should just direct choose a parent
+
 				}
-			}
-		}
+					
 	}
 	//  Overwrite the old population with the new one.
-	//
-	for (i = 0; i < 4; i++)
-	{
+	for (i = 0; i < SIZE; i++)
 		popnext[i] = popcurrent[i];
-	}
-	return(0);
-}
-
-void *pickchroms(chrom popnext[SIZE])          // 函数：选择个体；
-{
-	int i, j;
-	chrom temp;                                // 中间变量
-	//因此此处设计的是个个体，所以参数是
-	for (i = 0; i < 3; i++)                           // 根据个体适应度来排序；（冒泡法）
-	{
-		for (j = 0; j < 3 - i; j++)
-		{
-			if (popnext[j + 1].fit > popnext[j].fit)
-			{
-				temp = popnext[j + 1];
-				popnext[j + 1] = popnext[j];
-				popnext[j] = temp;
-
-			}
-		}
-	}
-	for (i = 0; i < 4; i++)
-	{
-		printf("\nSorting:popnext[%d] fitness=%d", i, popnext[i].fit);
-		printf("\n");
-	}
-	flushall();/* 清除所有缓冲区 */
 	return(0);
 }
 
@@ -230,18 +177,16 @@ double r8_uniform_ab(double a, double b, int &seed)
 	}
 }
 
-void *crossover(chrom popnext[SIZE])              // 函数：交叉操作；
+void *crossover(chrom popnext[SIZE])
 {
-
 	int random;
 	int i;
-	//srand(time(0)); 
-	random = rand();                             // 随机产生交叉点；
-	random = ((random % 5) + 1);                     // 交叉点控制在0到5之间；
+	srand(time(0)); 
+	random = ((random % (N - 2)) + 1);                 //pick a crossover point between 1 to SIZE - 1
 	for (i = 0; i < random; i++)
 	{
-		popnext[2].bit[i] = popnext[0].bit[i];   // child 1 cross over
-		popnext[3].bit[i] = popnext[1].bit[i];   // child 2 cross over
+		popnext[2].bit[i] = popnext[0].bit[i];   // child 1 cross over                    // rewrite crossover
+		popnext[3].bit[i] = popnext[1].bit[i];   // child 2 cross over                    // using the choosen parents to do crossover
 	}
 
 	for (i = random; i < 6; i++)                      // crossing the bits beyond the cross point index
@@ -252,7 +197,7 @@ void *crossover(chrom popnext[SIZE])              // 函数：交叉操作；
 
 	for (i = 0; i < 4; i++)
 	{
-		popnext[i].fit = y(x(popnext[i]));        // 为新个体计算适应度值；
+		popnext[i].fit = fitness(popnext[i]);        // 为新个体计算适应度值；
 	}
 
 	for (i = 0; i < 4; i++)
@@ -263,16 +208,16 @@ void *crossover(chrom popnext[SIZE])              // 函数：交叉操作；
 	return(0);
 }
 
-void *mutation(chrom popnext[SIZE])               // 函数：变异操作；
+void *mutation(chrom popnext[SIZE])                //
 {
 
 	int random;
 	int row, col, value;
 	//srand(time(0)); 
-	random = rand() % 50;  // 随机产生到之间的数；
+	random = rand() % 100;  // 随机产生到之间的数；
 	//变异操作也要遵从一定的概率来进行，一般设置为0到0.5之间
 	//
-	if (random == 25)                              // random==25的概率只有2%，即变异率为，所以是以小概率进行变异！！
+	if (random == 5)                              // random==5的概率只有1%，即变异率为，所以是以小概率进行变异！！
 	{
 		col = rand() % 6;                            // 随机产生要变异的基因位号；
 		row = rand() % 4;                            // 随机产生要变异的染色体号；
