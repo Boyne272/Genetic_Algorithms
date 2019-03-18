@@ -7,14 +7,14 @@ int main(int argc, char *argv[]) {
 	srand(time(NULL));
 	
 		// check an input file was given
-	if (argc != 2)
-		throw "Invalid number of arguments";
+	//if (argc != 2)
+	//	throw "Invalid number of arguments";
 	
 		// unpack the input argument
-	string input = argv[1];
-	ifstream file(input);
-	if (!file.is_open())
-		throw input + " not found";
+	//string input = argv[1];
+	//ifstream file(input);
+	//if (!file.is_open())
+	//	throw input + " not found";
 	
 		// load the file
 	stringstream ss;
