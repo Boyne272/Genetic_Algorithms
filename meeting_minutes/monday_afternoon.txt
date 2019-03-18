@@ -1,0 +1,35 @@
+rich - code review turned on. 
+rich - what sections do people like 
+
+3 sections are 
+	genetic 
+	validation 
+	working of the circuit
+	(also testing)
+
+rich  	- watch out for build ups in simulations which is also validation but have to do it in real time. 
+rich 	- input and output of fitness values seems to be toughest section (seems to be toughest).
+wade 	- has done some genetic algs before - did some reliability and performance evaluation of a facility using genetic algorithms in spreadsheet form not code 
+UG		- has also done some matlab before
+Gareth 	- would prefer genetic 
+hamed 	- open to all
+
+
+
+	-> now mapping out code on board. (see first_presentation diagram)
+	-> looking at how to build so parralisation late on is easy.
+	-> either master slave or inter process reproduction - one process on each node.
+	-> master slave may be more efficient. 
+
+	-> Now discussing class structure - overall circuit class.
+
+
+Teams:
+Richard 		- Overlord
+Hamed/Gareth 	- Simulation
+Wade/Yujie 		- Genetic Algorithm
+Ye/Leo 			- Validation
+
+
+Rough Schedule:
+	- 
