@@ -2,7 +2,6 @@
 #include <ctime>
 #include <cstdlib> // generate randem number
 
-
 #define num_units 10
 #define N 10
 
@@ -42,7 +41,6 @@ int partition(item list[], int left, int right)
 	swap(list, right, storeIndex);
 	return storeIndex;
 }
-
 
 
 void recursionQuick(item list[], int first, int last) {
@@ -92,26 +90,6 @@ int main()
 		}
 		cout << endl<<item_array[i].fitness_value << endl<<endl;
 	}
-
-	/*
-	int intList[N];
-	int num;
-	for (int i = 0; i < N; i++) {
-		num = (rand() + time(0)) % 1000;
-		intList[i] = num;
-	}
-	cout << "intList before sorting: " << endl;
-	for (int i = 0; i < N; i++) {
-		cout<< intList[i]<<" ";
-	}
-	cout << endl;
-	quickSort(intList, N);
-	cout << "intList after quick sort: " << endl;
-	for (int i = 0; i < N; i++) {
-		cout << intList[i] << " ";
-	}
-	cout << endl;
-	*/
 	system("pause");
 	return 1;
 }
