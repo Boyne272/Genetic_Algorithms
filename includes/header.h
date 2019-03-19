@@ -11,7 +11,6 @@
 #include <sstream>		// for reading in string from files
 #include <fstream>		// writing/reading files
 
-const int numb_nodes = 5;
-const int numb_pipes = 2* numb_nodes + 1;
+#include <algorithm>	// for copy function in tests
 
 using namespace std;

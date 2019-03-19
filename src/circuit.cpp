@@ -4,20 +4,34 @@
 
 using namespace std;
 
-circuit::circuit() {
-	
-		// initalise the cunits
-	this->units = new cunit[this->num_node + 2];
+// -------------------------- setup ------------------------------
 
-	/*for (int i = 0; i < num_node + 2; i++)
-		this->units[i] = cunit(i);*/
+circuit::circuit(int num_node) : num_node(num_node), adj_list_length(1 + 2*num_node) {
+	
+		// initalise the cunits (include the exit nodes too)
+	units = new cunit[num_node + 2];
+	for (int i = 0; i < num_node + 2; i++) {
+		units[i].num_node = num_node;
+		units[i].id = i;
+	}
+
+		// setup the adjasency list
+	adjacency_list = new int[adj_list_length];
 
 }
+
+circuit::~circuit()
+{
+	delete[] adjacency_list;
+	delete[] units;
+}
+
+// -------------------------- validation ------------------------------
 
 bool circuit::validate_simple() {
 
 		// for every nodes two pipes (not source pipe)
-	for (int i = 1; i < numb_pipes; i+=2) {
+	for (int i = 1; i < adj_list_length; i+=2) {
 		const int node = (i - 1) / 2;
 		
 			// conc and tail pipes have same target node
@@ -33,90 +47,95 @@ bool circuit::validate_simple() {
 }
 
 
-void circuit::set_cunits() {
-	// REWRITE.
-	// externaly adjacency list will be updated.
+void circuit::set_units() {
 
+		// set all internal nodes to new adjaceny list
 	for (int i = 0; i < this->num_node; i++) {
 		units[i].id = i;
-		units[i].out_conc = adjacency_list[(2 * i) + 1];
-		units[i].out_tail = adjacency_list[(2 * i) + 2];
-		units[i].conc_mark = false;
-		units[i].tail_mark = false;
-		units[i].source_mark = false;
+		units[i].out_conc	= adjacency_list[(2 * i) + 1];
+		units[i].out_tail	= adjacency_list[(2 * i) + 2];
+		units[i].mark		= false;
+		units[i].conc_found	= false;
+		units[i].tail_found	= false;
 		units[i].reset_contents();
 	}
 
+		// for the two exit nodes
 	for (int i = this->num_node; i < this->num_node + 2; i++) {
 		units[i].id = i;
 		units[i].reset_contents();
 	}
-
-
-
-	
-
 }
 
 
 bool circuit::validate_connected() {
 
-	units[adjacency_list[0]].mark(units);
+		// start enterance test
+	const int in_node = adjacency_list[0];
+	units[in_node].mark_input(units, in_node);
 
-	for (int i = 0; i < numb_nodes; i++) {
-		if (units[i].conc_mark)
+		// check each node was reached
+	for (int i = 0; i < num_node; i++)
+		if (units[i].mark != in_node)
 			return false;
-		if (units[i].tail_mark)
-			return false;
-		if (units[i].source_mark)
+
+		// for each node do the exit tests
+	for (int i = 0; i < num_node; i++) {
+
+			// the source node by reaching very other node much reach both exits
+		if (i == adjacency_list[0])
+			continue;
+
+			// start that nodes backwards test
+		units[i].mark_output(units, i);
+		
+			// if either the exit pipes were not found fail
+		//cout << "node " << node << " " << units[node].tail_found << " "
+		//	<< units[node].conc_found << "\n";
+		if (!(units[i].tail_found && units[i].conc_found))
 			return false;
 	}
 
 	return true;
 }
 
-// SIMULATION TEAM CODE: 
-// Constructor.
 
-circuit::circuit(int *adjacency_array, int *adj_length) {
-	// CONSTRUCTOR
-	// seting up cell units
-	// copies in adjacency list of cells.
+// -------------------------- simulation ------------------------------
 
-	this->adj_list_length = *adj_length;
-	// num_node is number of REAL nodes, not including ghost concentrate and tail nodes. 
-	this->num_node = (this->adj_list_length - 1) / 2;
+//circuit::circuit(int *adjacency_array, int *adj_length) {
+//	// CONSTRUCTOR
+//	// seting up cell units
+//	// copies in adjacency list of cells.
+//
+//	this->adj_list_length = *adj_length;
+//	// num_node is number of REAL nodes, not including ghost concentrate and tail nodes. 
+//	this->num_node = (this->adj_list_length - 1) / 2;
+//
+//	this->adjacency_list = new int[this->adj_list_length];
+//	for (int i = 0; i < this->adj_list_length; i++) {
+//		this->adjacency_list[i] = adjacency_array[i];
+//	}
+//	// now initialise the Cell Units.
+//
+//	this->units = new cunit[this->num_node + 2];
+//
+//	for (int i = 0; i < this->num_node; i++) {
+//		units[i].id = i;
+//		units[i].out_conc = adjacency_list[(2 * i) + 1];
+//		units[i].out_tail = adjacency_list[(2 * i) + 2];
+//	}
+//
+//	for (int i = this->num_node; i < this->num_node + 2; i++) {
+//		units[i].id = i;
+//	}
+//}
 
-	this->adjacency_list = new int[this->adj_list_length];
-	for (int i = 0; i < this->adj_list_length; i++) {
-		this->adjacency_list[i] = adjacency_array[i];
-	}
-	// now initialise the Cell Units.
 
-	this->units = new cunit[this->num_node + 2];
-
-	for (int i = 0; i < this->num_node; i++) {
-		units[i].id = i;
-		units[i].out_conc = adjacency_list[(2 * i) + 1];
-		units[i].out_tail = adjacency_list[(2 * i) + 2];
-	}
-
-	for (int i = this->num_node; i < this->num_node + 2; i++) {
-		units[i].id = i;
-	}
-}
-
-circuit::~circuit()
-{
-	delete[] adjacency_list;
-	delete[] units;
-}
-
+	// moves the data from each cell into their respective sending buffers.
 void circuit::step() {
-	// stepping function: moves the data from each cell into their respective sending buffers.
 
+		// for each node, including the outputs
 	for (int i = 0; i < this->num_node + 2; i++) {
-		// for each node, including the dummy outputs
 
 		// PUT IN CALC YIELD 
 		// copies the current contents into the old contents - this is used for convergence checks. 
@@ -125,17 +144,17 @@ void circuit::step() {
 		units[i].calc_yield();
 	}
 
-	// now to move data through the nodes. 
-	// just for non dummy nodes.
+	// now to move data through non dummy nodes.
 	for (int i = 0; i < this->num_node; i++) {
-		// for each c unit[i] find the c unit it is sending material to. 
-		// then add the material being sent to it by c unit[i].
+		// find the unit each pipe sends to and add the material sent by unit[i].
 
-		units[(units[i].out_conc)].contents[0] += units[i].conc_send[0];
-		units[(units[i].out_conc)].contents[1] += units[i].conc_send[1];
+		const int conc = (units[i].out_conc);
+		units[conc].contents[0] += units[i].conc_send[0];
+		units[conc].contents[1] += units[i].conc_send[1];
 
-		units[(units[i].out_tail)].contents[0] += units[i].tail_send[0];
-		units[(units[i].out_tail)].contents[1] += units[i].tail_send[1];
+		const int tail = (units[i].out_tail);
+		units[tail].contents[0] += units[i].tail_send[0];
+		units[tail].contents[1] += units[i].tail_send[1];
 	}
 }
 
