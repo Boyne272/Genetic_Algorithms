@@ -5,14 +5,14 @@
 #include <iostream>
 
 #define N 21                  //21 CELLS
-#define SIZE 100              //100 CHROMS
+#define SIZE 10              //100 CHROMS
 
 using namespace std;
 
 typedef struct Chrom
 {
 	int bit[N];             // gene of a chrom
-	int fit = 0;            // fitness default 0
+	double fit = 0;            // fitness default 0
 	double rfit = 0;        // relative fitness, the percentage of all fitness default 0
 	double cfit = 0;        // cumulative fitness default 0
 }chrom;
@@ -30,7 +30,7 @@ bool valid(chrom *a_chrom);
 
 void main()
 {
-	int num = 1000;                                    // iteration round£»
+	int num = 100;                                  // iteration round£»
 	int i, Max;
 	Max = 0;
 	chrom *parent_chroms = new chrom[SIZE];
@@ -38,30 +38,37 @@ void main()
 
 	srand(time(0));
 	chrom a_chrom;
-	for (int i = 0; i < N; i++)
-	{
-		a_chrom.bit[i] = rand() % N + 1;
-	}
-		
+	for (int i = 0; i < N; i++) a_chrom.bit[i] = rand() % N + 1;
 
 	initialize(parent_chroms, a_chrom);    // generate initial population
-
-	for (i = 0; i < num; i++)                        //start iteration num ROUNDS
-	{	
-		cout << "round " << i << endl;
-		reproduction(parent_chroms, children_chroms);
-		parent_chroms = children_chroms;
-		for (int j = 0; j < SIZE; j++)
-			fitness(&parent_chroms[j], &a_chrom);
-	}
 
 	cout << "a_chrom = " << endl;
 	for (int i = 0; i < N; i++)
 	{
-		a_chrom.bit[i] = rand() % N;
 		cout << a_chrom.bit[i] << "   ";
 	}
+	cout << "cankao 's fitness: "<<a_chrom.fit << endl;
 	cout << endl;
+
+	for (i = 0; i < num; i++)                        //start iteration num ROUNDS
+	{
+		cout <<endl<<endl<<"round " << i << endl;
+
+		reproduction(parent_chroms, children_chroms);
+		parent_chroms = children_chroms;
+		for (int j = 0; j < SIZE; j++)
+			fitness(&parent_chroms[j], &a_chrom);
+
+		for (int j = 0; j < SIZE; j++)
+		{
+			for (int k = 0; k < N; k++)
+				cout << parent_chroms[j].bit[k] << "   ";
+			cout << endl;
+			cout << "Fitness: " << parent_chroms[i].fit << endl;
+
+		}
+		cout << endl;
+	}
 	cout << "final = " << endl;
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -113,16 +120,24 @@ void reproduction(chrom *parent_chroms, chrom *children_chroms)
 		}
 	children_chroms[0] = parent_chroms[max_index];               // remain the best parent		
 	// get two parents each time and do crossover
+
 	update_parents_cfit(parent_chroms, max_index);
 	int updata_index = 1, father_index, mother_index;
 	chrom father, mother;
+	
 	while (updata_index < SIZE)
 	{
-		//cout <<"updata_index " <<updata_index << endl;
+		cout << "updata_index"<<updata_index << endl;
 		father = pick_parent_chrom(parent_chroms, max_index, &father_index);           // get a father chrom
 		mother = pick_parent_chrom(parent_chroms, max_index, &mother_index);           // get a mother chrom
-		/*cout << "father_index " << father_index << endl;
-		cout << "mother_index " << mother_index << endl;*/
+		//cout << "father_index " << father_index << endl;
+		//cout << "mother_index " << mother_index << endl;
+		for (int i = 0; i < SIZE; i++)
+		{
+			cout << "r "<<parent_chroms[i].rfit << " " << endl;
+			cout << "c "<<parent_chroms[i].cfit << " " << endl;
+		}
+		
 		if (father_index != mother_index)
 		{
 			crossover(&father, &mother);
@@ -142,6 +157,7 @@ void reproduction(chrom *parent_chroms, chrom *children_chroms)
 			}
 		}
 	}
+	cout << "reproduction finish" << endl;
 }
 
 bool valid(chrom *a_chrom)
@@ -179,7 +195,7 @@ void update_parents_cfit(chrom *chroms_parent, int max_index)
 			start = i;                                                     // start point for the next updating round of cfit
 			break;
 		}
-
+	
 	chroms_parent[max_index].cfit = 0;                                    // make that one not selectable
 	chroms_parent[max_index].rfit = 0;
 

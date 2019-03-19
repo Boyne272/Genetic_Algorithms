@@ -1,0 +1,6 @@
+﻿  Source.cpp
+c:\users\yujie\onedrive\桌面\groupwork\acse-4-project-3-copper\ga_temp\ga\ga\source.cpp(32): warning C4326: return type of 'main' should be 'int' instead of 'void'
+c:\users\yujie\onedrive\桌面\groupwork\acse-4-project-3-copper\ga_temp\ga\ga\source.cpp(39): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\yujie\onedrive\桌面\groupwork\acse-4-project-3-copper\ga_temp\ga\ga\source.cpp(242): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\yujie\onedrive\桌面\groupwork\acse-4-project-3-copper\ga_temp\ga\ga\source.cpp(256): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  GA.vcxproj -> C:\Users\Yujie\OneDrive\桌面\Groupwork\acse-4-project-3-copper\GA_temp\GA\x64\Debug\GA.exe
