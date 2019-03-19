@@ -1,5 +1,5 @@
 #include "header.h"
-#include "Genetic_Algorithm.h"
+#include "genetic_algorithm.h"
 
 int main(int argc, char *argv[]) {
 	

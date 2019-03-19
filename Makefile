@@ -23,7 +23,7 @@ all: Genetic_Algorithm
 
 Genetic_Algorithm: $(BIN_DIR)/Genetic_Algorithm
 
-$(BIN_DIR)/Genetic_Algorithm: $(BUILD_DIR)/main.o $(BUILD_DIR)/Genetic_Algorithm.o $(BUILD_DIR)/cunit.o $(BUILD_DIR)/circuit.o 
+$(BIN_DIR)/Genetic_Algorithm: $(BUILD_DIR)/main.o $(BUILD_DIR)/genetic_algorithm.o $(BUILD_DIR)/cunit.o $(BUILD_DIR)/circuit.o 
 	$(CXX) -o $@ $^
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp $(INCLUDE_DIR)/*.h | directories
@@ -56,7 +56,7 @@ $(TEST_BIN_DIR)/test_travis: $(TEST_BUILD_DIR)/test_travis.o #$(BUILD_DIR)/addit
 # evaluate test
 test_evaluate: $(TEST_BIN_DIR)/test_evaluate
 
-$(TEST_BIN_DIR)/test_evaluate: $(TEST_BUILD_DIR)/test_evaluate.o #$(BUILD_DIR)/additional dependencies
+$(TEST_BIN_DIR)/test_evaluate: $(TEST_BUILD_DIR)/test_evaluate.o $(BUILD_DIR)/circuit.o $(BUILD_DIR)/cunit.o
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 

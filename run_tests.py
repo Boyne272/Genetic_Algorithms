@@ -24,6 +24,7 @@ for file in files:
             print("Test ...%s \t\t failed" % file[-20:])
             glob_fail = True
         else:
+            print("Test ...%s output:\n", output.stdout)
             print("Test ...%s \t\t passed" % file[-20:])
 
 if glob_fail:
