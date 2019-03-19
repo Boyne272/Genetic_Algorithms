@@ -30,13 +30,13 @@ bool valid(chrom *a_chrom);
 
 void main()
 {
-	int num = 100;                                  // iteration round£»
+	int num = 10;                                  // iteration round£»
 	int i, Max;
 	Max = 0;
 	chrom *parent_chroms = new chrom[SIZE];
 	chrom *children_chroms = new chrom[SIZE];
 
-	srand(time(0));
+	srand(time(NULL));
 	chrom a_chrom;
 	for (int i = 0; i < N; i++) a_chrom.bit[i] = rand() % N + 1;
 
@@ -55,7 +55,8 @@ void main()
 		cout <<endl<<endl<<"round " << i << endl;
 
 		reproduction(parent_chroms, children_chroms);
-		parent_chroms = children_chroms;
+		for (int j = 0; j < SIZE; j++)
+			children_chroms[j] = parent_chroms[j];
 		for (int j = 0; j < SIZE; j++)
 			fitness(&parent_chroms[j], &a_chrom);
 
@@ -64,7 +65,7 @@ void main()
 			for (int k = 0; k < N; k++)
 				cout << parent_chroms[j].bit[k] << "   ";
 			cout << endl;
-			cout << "Fitness: " << parent_chroms[i].fit << endl;
+			cout << "Fitness: " << parent_chroms[j].fit << endl;
 
 		}
 		cout << endl;
@@ -130,12 +131,12 @@ void reproduction(chrom *parent_chroms, chrom *children_chroms)
 		cout << "updata_index"<<updata_index << endl;
 		father = pick_parent_chrom(parent_chroms, max_index, &father_index);           // get a father chrom
 		mother = pick_parent_chrom(parent_chroms, max_index, &mother_index);           // get a mother chrom
-		//cout << "father_index " << father_index << endl;
-		//cout << "mother_index " << mother_index << endl;
+		cout << "father_index " << father_index << endl;
+		cout << "mother_index " << mother_index << endl;
 		for (int i = 0; i < SIZE; i++)
 		{
-			cout << "r "<<parent_chroms[i].rfit << " " << endl;
-			cout << "c "<<parent_chroms[i].cfit << " " << endl;
+			cout <<"i" << i << "r "<<parent_chroms[i].rfit << " " << endl;
+			cout << "i" << i << "c "<<parent_chroms[i].cfit << " " << endl;
 		}
 		
 		if (father_index != mother_index)
@@ -176,44 +177,24 @@ void update_parents_cfit(chrom *chroms_parent, int max_index)
 		for (int i = 0; i < SIZE; i++)
 			chroms_parent[i].fit += (-min);
 	}
+
 	double sum = 0.0;
 	//find the total fitness of the population, not include the one with max fitness
 	for (int i = 0; i < SIZE; i++)
-		if (i != max_index)
 			sum = sum + chroms_parent[i].fit;
 	//calculate the relative fitness of each member, not include the one with max fitness
 	for (int i = 0; i < SIZE; i++)
-		if (i != max_index)
 			chroms_parent[i].rfit = chroms_parent[i].fit / sum;
 	//calculate the cumulative fitness
-	//popcurrent[0].cfit = popcurrent[0].rfit;
-	int start;
-	for (int i = 0; i < SIZE; i++)
-		if (i != max_index)
-		{
-			chroms_parent[i].cfit = chroms_parent[i].rfit;
-			start = i;                                                     // start point for the next updating round of cfit
-			break;
-		}
-	
-	chroms_parent[max_index].cfit = 0;                                    // make that one not selectable
-	chroms_parent[max_index].rfit = 0;
-
-	for (int i = start; i < SIZE; i++)
-		if (i != max_index && (i - 1) != max_index && i != 0)                                                // in case, start is not zero(can always happen)
-			chroms_parent[i].cfit = chroms_parent[i - 1].cfit + chroms_parent[i].rfit;
-		else if(i != max_index  && i == 0)
-			chroms_parent[i].cfit = chroms_parent[i].rfit;
-		else if ((i - 1) == max_index)
-			if ((i - 1) == 0)
-				chroms_parent[i].cfit = chroms_parent[i].rfit;
-			else if ((i - 1) > 0)
-				chroms_parent[i].cfit = chroms_parent[i - 2].cfit + chroms_parent[i].rfit;    // finish getting the cfit for all parent except one with max fitness
+	chroms_parent[0].cfit = chroms_parent[0].rfit;
+	for (int i = 1; i < SIZE; i++)
+			chroms_parent[i].cfit = chroms_parent[i].rfit + chroms_parent[i - 1].cfit;                  // start point for the next updating round of cfit
 }
 
 //pick a chrom base on fitness value choose next populartion
 chrom pick_parent_chrom(chrom *parent_chroms, int max_index, int *check_index)
 {
+	srand(time(NULL));
 	double p = (1.0 + (double)rand()) / (double)(RAND_MAX + 1);                 // a random number between 0 to 1
 	chrom parent;
 	for (int i = 0; i < SIZE; i++)
@@ -239,7 +220,7 @@ chrom pick_parent_chrom(chrom *parent_chroms, int max_index, int *check_index)
 
 void crossover(chrom *father, chrom *mother)
 {
-	srand(time(0));
+	srand(time(NULL));
 	int random = rand() % (N - 2) + 1;               // get a random number between 1 to ( N - 1 )
 	int *temp_chrom_bit = new int[random];
 	for (int i = 0; i < random; i++)                     // copy the data before random for father
@@ -253,7 +234,7 @@ void crossover(chrom *father, chrom *mother)
 void mutation(chrom *a_chrom)
 {
 	int random = rand() % 10;
-	srand(time(0)); 
+	srand(time(NULL)); 
 	int random_index, random_change;
 
 	if (random == 5)                       // only 1% random == 5, can be any number between 0 to 100
