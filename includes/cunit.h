@@ -21,10 +21,10 @@ public:
 	cunit(int id, int dest_1, int dest_2);
 	// default
 	cunit();
-	int conc_num;
+	//int conc_num;
 	void reset_contents();
 	//index of the unit to which this unit’s concentrate stream is connected 
-	int tail_num;
+	//int tail_num;
 	int id;// id num of the cunit.
 	//A Boolean that is changed to true if the unit has been seen 
 	//bool mark;

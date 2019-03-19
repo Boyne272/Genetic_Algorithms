@@ -48,7 +48,7 @@ void cunit::mark(cunit* units) {
 
 }
 
-cunit::cunit(int id, int dest_1, int dest_2) : id(id), conc_num(dest_1), tail_num(dest_2) {
+cunit::cunit(int id, int dest_1, int dest_2) : id(id), out_conc(dest_1), out_tail(dest_2) {
 
 	for (int i = 0; i < 2; i++) {
 		// initialise values.
@@ -104,3 +104,5 @@ bool cunit::within_tol(double tol) {
 
 // default constructor
 cunit::cunit() {}
+
+

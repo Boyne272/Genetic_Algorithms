@@ -33,10 +33,28 @@ int main(int argc, char** argv) {
 		cout << "failed test 2\n";
 		return -1;
 	}
+
+
 	cout << test2->fitness << endl;
 		// finished
-	cout << "passed both tests\n";
+
 	
+
+
+	//circuit *test3 = new circuit();
+	//test3->adjacency_list = adj_test1;
+	//test3->set_cunits();
+
+	//const double tmp3 = test3->fitness - 24.8162;
+	//if (!(fabs(tmp3) < 0.01)) {
+	//	cout << "failed test 1\n";
+	//	return -1;
+	//}
+	////int adj_test1[11]{ 0,4,3,2,0,5,4,4,6,2,1 };
+
+	//cout << "passed both tests\n";
+
+	//system("pause");
 	return 0;
 
 	
