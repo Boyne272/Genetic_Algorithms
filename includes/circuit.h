@@ -5,6 +5,8 @@ class circuit {
 public:
 	
 		// vairables for solving
+	int num_nodes = 3;
+	int num_pipes = 2 * num_nodes + 1;
 	int* connections;
 	double out_conc = 0;
 	double out_tail = 0;
@@ -21,6 +23,7 @@ public:
 
 		// methods
 	circuit();
+	~circuit();
 	void reproduce(circuit cother_circuit, int* &new_connections);
 	bool validate_simple();
 	void set_cunits();

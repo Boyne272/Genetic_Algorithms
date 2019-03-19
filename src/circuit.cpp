@@ -3,19 +3,25 @@
 #include "cunit.h"
 
 circuit::circuit() {
-	
+
 		// initalise the cunits
-	for (int i = 0; i < numb_nodes; i++)
-		this->units[i] = cunit(i);
+	units = new cunit[num_nodes];
+	for (int i = 0; i < num_nodes; i++)
+		units[i].id = i;
+
+}
+
+circuit::~circuit() {
+
+	delete[] this->units;
 
 }
 
 bool circuit::validate_simple() {
 
 		// for every nodes two pipes (not source pipe)
-	for (int i = 1; i < numb_pipes; i+=2) {
+	for (int i = 1; i < num_pipes; i+=2) {
 		const int node = (i - 1) / 2;
-		
 			// conc and tail pipes have same target node
 		if (connections[i] == connections[i + 1])
 			return false;
@@ -31,7 +37,7 @@ bool circuit::validate_simple() {
 
 void circuit::set_cunits() {
 
-	for (int i = 0; i < numb_nodes; i++) {
+	for (int i = 0; i < num_nodes; i++) {
 		units[i].out_conc = connections[2 * i + 1];
 		units[i].out_tail = connections[2 * i + 2];
 		units[i].conc_mark = false;
@@ -44,15 +50,17 @@ void circuit::set_cunits() {
 
 bool circuit::validate_connected() {
 
-	units[connections[0]].mark(units);
+		// set the input pipe to start marking nodes
+	units[connections[0]].mark(units, num_nodes);
 
-	for (int i = 0; i < numb_nodes; i++) {
-		if (units[i].conc_mark)
+		// check all nodes see source and both exits
+	for (int i = 0; i < num_nodes; i++) {
+		if (!units[i].conc_mark)
 			return false;
-		if (units[i].tail_mark)
+		if (!units[i].tail_mark)
 			return false;
-		if (units[i].source_mark)
+		if (!units[i].source_mark)
 			return false;
 	}
-
+	return true;
 }
