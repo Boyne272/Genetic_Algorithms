@@ -6,9 +6,27 @@ public:
 	
 		// vairables for solving
 	int* connections;
+
 	double out_conc = 0;
 	double out_tail = 0;
-	double fitness 	= 0;
+
+	// SIMULATION TEAM CODE.
+	int num_node;
+	int adj_list_length;
+	int *adjacency_list;
+	// storage for the units.
+	cunit *unit_list;
+	//CUnit unit_list[7];
+	// constructor
+	circuit(int *adjacency_array, int *adj_length);
+	// destructor
+	~circuit();
+	double fitness = 0;
+	void step();
+	void evaluate();
+	// SIMULATION TEAM CODE END.
+
+
 	cunit* units;
 	
 		// run parameters
@@ -25,7 +43,7 @@ public:
 	bool validate_simple();
 	void set_cunits();
 	bool validate_connected();
-	void evaluate();
+	
 	void costs(); 		// possibly merge with the evalutae
 	
 };
