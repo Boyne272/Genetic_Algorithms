@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 	
 
 	const double tmp = test1->fitness - 24.8162;
-	if (!(abs(tmp) < 0.01)) {
+	if (!(fabs(tmp) < 0.01)) {
 		cout << "failed test 1\n";
 		return -1;
 	}
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 	test2->evaluate();
 	
 	const double tmp2 = test2->fitness - 24.8162;
-	if (!(abs(tmp2) < 0.01)) {
+	if (!(fabs(tmp2) < 0.01)) {
 		cout << "failed test 2\n";
 		return -1;
 	}
