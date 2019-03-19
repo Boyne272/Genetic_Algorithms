@@ -1,28 +1,44 @@
 #include "header.h"
-#include "Cunit.h"
+#include "cunit.h"
 
 class circuit {
 public:
 	
-		// vairables for solving
-	int* connections;
-	double out_conc = 0;
-	double out_tail = 0;
-	double fitness 	= 0;
-	// need add the cells list
-	
-		// run parameters
+
+	// SET BY USER. 
 	double mutate_prob;
 	double cross_prob;
 	double num_units;
 	double ppkg_gormaium;
 	double ppkg_waste;
+
+	
+	// SIMULATION TEAM CODE.
+	int num_node;
+	int adj_list_length;
+	int *adjacency_list;
+	double fitness = 0;
+	// SIMULATION TEAM CODE END.
+	cunit* units;
+	
+		// run parameters
+	
 	
 
 		// methods
-	void reproduce(other_circuit, &new_connections);
-	bool validate();
-	void evaluate();
-	void costs(); 		// possibly merge with the evalutae
-	
+	circuit();
+	// constructor
+	circuit(int *adjacency_array, int *adj_length); // delete later.
+	// destructor
+	~circuit();
+
+	void reproduce(circuit cother_circuit, int* &new_connections);
+
+	bool validate_simple();
+	void set_cunits();
+	bool validate_connected();
+	// SIMULATION METHODS.
+	void step();
+	bool evaluate();
+	bool convergence_check(double tol);	
 };
