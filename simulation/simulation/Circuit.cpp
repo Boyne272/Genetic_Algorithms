@@ -22,8 +22,8 @@ Circuit::Circuit(int *adjacency_array, int *adj_length){
 
 
 
-	cout << "Number of nodes:\t\t" << this->num_node << endl;
-	cout << "Length of adjacency list:\t" << this->adj_list_length << endl;
+	//cout << "Number of nodes:\t\t" << this->num_node << endl;
+	//cout << "Length of adjacency list:\t" << this->adj_list_length << endl;
 
 
 
@@ -77,6 +77,31 @@ void Circuit::step() {
 	}
 }
 
+void Circuit::evaluate() {
+	// for basic limit case - will change to convergence later.
+
+	int limit = 200;
+
+	for (int i = 0; i < this->num_node; i++) {
+		this->unit_list[i].reset_contents();
+	}
+
+	for (int i = 0; i < limit; i++) {
+		//cout << "INDEX" << i << endl;
+		//initial feed
+		this->unit_list[this->adjacency_list[0]].contents[0] += 10;
+		this->unit_list[this->adjacency_list[0]].contents[1] += 100;
+		this->step();
+	}
+
+	double profit = 0;
+	profit = (this->unit_list[this->num_node].contents[0] * 100) - (this->unit_list[this->num_node].contents[1] * 500);
+
+	//cout << profit << endl;
+	this->fitness = profit;
+
+}
+
 
 int main() {
 	
@@ -95,37 +120,39 @@ int main() {
 	//}
 	//system("pause");
 
-	int limit = 200;
+	//int limit = 200;
 
-	for (int i = 0; i < test->num_node; i++) {
-		test->unit_list[i].reset_contents();
-	}
+	//for (int i = 0; i < test->num_node; i++) {
+	//	test->unit_list[i].reset_contents();
+	//}
 
-	for (int i = 0; i < limit; i++){
-		//cout << "INDEX" << i << endl;
-		//initial feed
-		test->unit_list[test->adjacency_list[0]].contents[0] += 10;
-		test->unit_list[test->adjacency_list[0]].contents[1] += 100;
-		test->step();
-	}
+	//for (int i = 0; i < limit; i++){
+	//	//cout << "INDEX" << i << endl;
+	//	//initial feed
+	//	test->unit_list[test->adjacency_list[0]].contents[0] += 10;
+	//	test->unit_list[test->adjacency_list[0]].contents[1] += 100;
+	//	test->step();
+	//}
 
-	/*test->unit_list[0].contents[0] = 10;
-	test->unit_list[0].contents[1] = 100;
+	///*test->unit_list[0].contents[0] = 10;
+	//test->unit_list[0].contents[1] = 100;
 
-	test->step();*/
+	//test->step();*/
 
-	for (int i = 0; i < test->num_node + 2; i++) {
-		cout << "ID : " << test->unit_list[i].id << endl;
-		cout << "CONTENTS: GOOD:" << test->unit_list[i].contents[0] << " BAD: " << test->unit_list[i].contents[1] << endl;
+	//for (int i = 0; i < test->num_node + 2; i++) {
+	//	cout << "ID : " << test->unit_list[i].id << endl;
+	//	cout << "CONTENTS: GOOD:" << test->unit_list[i].contents[0] << " BAD: " << test->unit_list[i].contents[1] << endl;
 
-	}
+	//}
 
-	double profit = 0;
-	profit = (test->unit_list[test->num_node].contents[0] * 100) - (test->unit_list[test->num_node].contents[1] * 500);
-	cout << "PROFIT: " << profit << endl;
+	//double profit = 0;
+	//profit = (test->unit_list[test->num_node].contents[0] * 100) - (test->unit_list[test->num_node].contents[1] * 500);
+	//cout << "PROFIT: " << profit << endl;
 
 
+	test->evaluate();
 
+	cout << test->fitness << endl;
 
 
 

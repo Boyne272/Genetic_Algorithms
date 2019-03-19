@@ -14,8 +14,11 @@ public:
 	Circuit(int *adjacency_array, int *adj_length);
 	// destructor
 	~Circuit();
+	double fitness = 0;
 
 	void step();
+	void evaluate();
+
 
 
 
