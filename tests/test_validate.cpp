@@ -5,8 +5,7 @@
 #include "cunit.h"
 
 
-//int main(int argc, char** argv) {
-int tmp() {
+int main(int argc, char** argv) {
 
 	// ---------------------- test 1 -------------------------
 

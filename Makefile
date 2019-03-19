@@ -2,6 +2,7 @@
 
 CXX = g++
 CXXFLAGS = -Wall
+CPPFLAGS = -std=gnu++0x
 LDFLAGS =
 SOURCE_DIR = src
 INCLUDE_DIR = includes
@@ -70,7 +71,7 @@ $(TEST_BIN_DIR)/test_genetic_algorithm: $(TEST_BUILD_DIR)/test_genetic_algorithm
 # validation test
 test_validate: $(TEST_BIN_DIR)/test_validate
 
-$(TEST_BIN_DIR)/test_validate: $(TEST_BUILD_DIR)/test_validate.o #$(BUILD_DIR)/additional dependencies
+$(TEST_BIN_DIR)/test_validate: $(TEST_BUILD_DIR)/test_validate.o $(BUILD_DIR)/circuit.o $(BUILD_DIR)/cunit.o
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 
@@ -86,7 +87,7 @@ runtests: ${TESTS}
 
 
 # clean the test files
-cleantest:
+cleantests:
 	rm -f $(TEST_BUILD_DIR)/* $(TEST_BIN_DIR)/*
 
 

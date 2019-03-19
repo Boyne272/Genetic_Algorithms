@@ -11,6 +11,7 @@
 #include <sstream>		// for reading in string from files
 #include <fstream>		// writing/reading files
 
-#include <algorithm>	// for copy function in tests
+#include <algorithm>		// for copy function in tests
+#include <cmath>		// fabs function
 
 using namespace std;
