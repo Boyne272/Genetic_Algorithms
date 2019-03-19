@@ -11,7 +11,6 @@ public:
 	bool tail_mark = false;
 	bool source_mark = false;
 	
-	void mark(cunit* cunits);
-	cunit(int id) : id(id) {}
+	void mark(cunit* units, int num_nodes);
 
 };
