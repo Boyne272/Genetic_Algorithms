@@ -115,10 +115,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="circuit.cpp" />
+    <ClCompile Include="cunit.cpp" />
+    <ClCompile Include="genetic_algorithm.cpp" />
+    <ClCompile Include="original GA.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GA_Header.h" />
+    <ClInclude Include="circuit.h" />
+    <ClInclude Include="cunit.h" />
+    <ClInclude Include="header.h" />
+    <ClInclude Include="genetic_algorithm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
