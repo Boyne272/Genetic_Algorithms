@@ -1,6 +1,7 @@
 #include "header.h"
 #include "genetic_algorithm.h"
 #include "cunit.h"
+#include <cstdlib>
 
 // cunits is a list of all cunit instances in order
 void cunit::mark(cunit* units) {
@@ -58,12 +59,19 @@ cunit::cunit(int id, int dest_1, int dest_2) : id(id), conc_num(dest_1), tail_nu
 void cunit::reset_contents() {
 	for (int i = 0; i < 2; i++) {
 		// initialise values.
-
+		this->old_contents[i] = 1; 
+		// resets old contents as differently to contents 
+		// this means that they will not be detected as converged on the first step.
 		this->contents[i] = 0;
 	}
 }
 void cunit::calc_yield() {
 	// first the conc to send
+
+	// copies the current contents into old contents.
+	this->old_contents[0] = this->contents[0];
+	this->old_contents[1] = this->contents[1];
+
 	this->conc_send[0] = 0.2 * this->contents[0];
 	this->conc_send[1] = 0.05 * this->contents[1];
 	//this->conc_send[1] = 0.05 * this->contents[1];
@@ -77,5 +85,21 @@ void cunit::calc_yield() {
 	this->contents[0] = 0;
 	this->contents[1] = 0;
 }
+
+bool cunit::within_tol(double tol) {
+	// checks if within 
+	cout << abs(contents[0] - old_contents[0]) << "    " << abs(contents[1] - old_contents[1]) << "     " << id <<endl;
+	if ((abs(contents[0] - old_contents[0]) < tol) && (abs(contents[1] - old_contents[1]) < tol)) {
+		//cout << "within tolerance" << endl;
+		return true;
+
+	}
+	//cout << abs(contents[0] - old_contents[0]) << "    " << abs(contents[1] - old_contents[1]) << endl;
+	else {
+		//cout << " not in tolerance" << endl;
+		return false;
+	}
+}
+
 // default constructor
 cunit::cunit() {}
