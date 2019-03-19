@@ -11,70 +11,66 @@ using namespace std;
 
 typedef struct Chrom
 {
-	int bit[N];         // gene of a chrom
-	int fit;            // fitness
-	double rfit;        //relative fitness, the percentage of all fitness
-	double cfit;        //cumulative fitness
+	int bit[N];             // gene of a chrom
+	int fit = 0;            // fitness default 0
+	double rfit = 0;        // relative fitness, the percentage of all fitness default 0
+	double cfit = 0;        // cumulative fitness default 0
 }chrom;
 
 // function define
-void *initialize(chrom popcurrent[SIZE]);
-int fitness(chrom popcurrent[SIZE]);
-void *pickchroms_new(chrom popcurrent[SIZE]); // 基于概率分布
-void *crossover(chrom popnext[SIZE]);//交叉操作
-void *mutation(chrom popnext[SIZE]);//突变
-double r8_uniform_ab(double a, double b, int &seed);//生成a~b之间均匀分布的数字
-chrom popcurrent[SIZE];
-chrom popnext[SIZE];
+void initialize(chrom *parent_chroms);
+void update_parents_cfit(chrom *chroms_parent, int max_index);
+void reproduction(chrom *parent_chroms, chrom *children_chroms);
+void fitness(chrom* a_chrom);
+chrom pick_parent_chrom(chrom *parent_chroms, int max_index, int *check_index);
+void crossover(chrom *father, chrom *mother);
+void mutation(chrom *a_chrom);
+bool valid(chrom *a_chrom);
+
 
 void main()
 {
-	int num;                                    // iteration round；
-	int i, j, l, Max, k;
+	int num = 100;                                    // iteration round；
+	int i, Max;
 	Max = 0;
-
-	cout << "\nWelcome to the Genetic Algorithm！\n";
-	cout << "The Algorithm is based on the function y = -x^2 + 5 to find the maximum value of the function.\n";
-
-	cout << ("\nPlease enter the no. of iterations\n:");
-	cin >> num;
+	chrom *parent_chroms = new chrom[SIZE];
+	chrom *children_chroms = new chrom[SIZE];
 
 	srand(time(0));
-	initialize(popcurrent);    // generate initial population
-	Max = popcurrent[0].fit;  
+	chrom a_chrom;
+	
+		
+	fitness(&a_chrom);
 
-	for (i = 0; i < num; i++)                        //start iteration
-	{
-
-		for (j = 0; j < SIZE; j++)
-			popnext[j] = popcurrent[j];           // update the popnext to date
-
-		pickchroms_new(popnext);                    // pick a good parent
-		crossover(popnext);                     // do crossover
-		mutation(popnext);                      // do mutation
-
-		for (j = 0; j < SIZE; j++)
-			popcurrent[j] = popnext[j];                // update all chrom
-
-	}  // 等待迭代终止；
-//对于真正随机数是需要注意取较大的迭代次数
-	for (l = 0; l < 3; l++)
-	{
-		if (popcurrent[l].fit > Max)
-		{
-			Max = popcurrent[l].fit;
-		}
-
+	initialize(parent_chroms);    // generate initial population
+	cout << "num" << endl;
+	for (i = 0; i < num; i++)                        //start iteration num ROUNDS
+	{	
+		cout << i <<endl;
+		reproduction(parent_chroms, children_chroms);
+		parent_chroms = children_chroms;
+		for (int j = 0; j < SIZE; j++)
+			fitness(&parent_chroms[j]);
 	}
-	printf("\n 当x等于 %d时，函数得到最大值为： %d ", k, Max);
-
+	cout << "a_chrom = " << endl;
+	for (int i = 0; i < N; i++)
+	{
+		a_chrom.bit[i] = rand() % N;
+		cout << a_chrom.bit[i] << "   ";
+	}
+	cout << endl;
+	cout << "final = " << endl;
+	for (int i = 0; i < SIZE; i++)
+	{
+		for(int j = 0; j < N; j++)
+			cout << parent_chroms[i].bit[j] << "   ";
+		cout << endl;
+	}
 	system("pause");
 
 }
 
-
-
-void *initialize(chrom popcurrent[SIZE])    // generate random initial population
+void initialize(chrom *parent_chroms)    // generate random initial population
 {
 	int i, j;;
 	int random;
@@ -84,158 +80,152 @@ void *initialize(chrom popcurrent[SIZE])    // generate random initial populatio
 	{
 		for (i = 0; i < N; i++)                       // from first gene to N th gene
 		{
-			random = (random % N);                 // random number between 0 to N
-			popcurrent[j].bit[i] = random;
+			random = rand() % N;                 // random number between 0 to N
+			parent_chroms[j].bit[i] = random;
 		}
 
-		popcurrent[j].fit = fitness(popcurrent);  // calculate the fitness value of a chrom
-		sum = sum + popcurrent[j].fit;
+		fitness(&parent_chroms[j]);            // calculate the fitness value of a chrom
 	}
-
-	for (j = 0; j < N; j++)
-	{
-		popcurrent[j].rfit = popcurrent[j].fit / sum;  // calculate relative fitness value, which will be used to choose parents
-		popcurrent[j].cfit = 0;                        // init to zero
-	}
-	return(0);
 }
 
-int fitness(chrom popcurrent[SIZE])    // get the fitness
+void fitness(chrom *a_chrom)    // get the fitness
 {
-	int y;
-	y = -(popcurrent[0].bit[0] * popcurrent[0].bit[0]) + 5;
-	return(y);
+	for (int i = 0; i < N; i++)
+		a_chrom->fit += a_chrom->bit[i];
+}
+
+void reproduction(chrom *parent_chroms, chrom *children_chroms)
+{
+	// find max fitness parents
+	double Max = parent_chroms[0].fit;
+	int max_index = 0;
+	for (int i = 1; i < SIZE; i++)
+		if (parent_chroms[i].fit > Max)
+		{
+			Max = parent_chroms[i].fit;
+			max_index = i;
+		}
+	children_chroms[0] = parent_chroms[max_index];               // remain the best parent
+	// get two parents each time and do crossover
+	update_parents_cfit(parent_chroms, max_index);
+	int updata_index = 1, father_index, mother_index;
+	chrom father, mother;
+	cout << "updata_index" << endl;
+	while (updata_index < SIZE)
+	{
+		cout << updata_index << endl;
+		father = pick_parent_chrom(parent_chroms, max_index, &father_index);           // get a father chrom
+		mother = pick_parent_chrom(parent_chroms, max_index, &mother_index);           // get a mother chrom
+		if (father_index != mother_index)
+		{
+			crossover(&father, &mother);
+			mutation(&father);
+			mutation(&mother);
+			if (valid(&father))
+			{
+				children_chroms[updata_index] = father;
+				updata_index++;
+			}
+			if (updata_index >= SIZE)
+				break;
+			if (valid(&mother))
+			{
+				children_chroms[updata_index] = mother;
+				updata_index++;
+			}
+		}
+			
+		
+	}
+}
+
+bool valid(chrom *a_chrom)
+{
+	return true;
+}
+
+void update_parents_cfit(chrom *chroms_parent, int max_index)
+{
+	double sum = 0.0;
+	//find the total fitness of the population, not include the one with max fitness
+	for (int i = 0; i < SIZE; i++)
+		if (i != max_index)
+			sum = sum + chroms_parent[i].fit;
+	//calculate the relative fitness of each member, not include the one with max fitness
+	for (int i = 0; i < SIZE; i++)
+		if (i != max_index)
+			chroms_parent[i].rfit = chroms_parent[i].fit / sum;
+	//calculate the cumulative fitness
+	//popcurrent[0].cfit = popcurrent[0].rfit;
+	int start;
+	for (int i = 0; i < SIZE; i++)
+		if (i != max_index)
+		{
+			chroms_parent[i].cfit = chroms_parent[i].rfit;
+			start = i;                                                     // start point for the next updating round of cfit
+			break;
+		}
+	chroms_parent[max_index].cfit = 0;                                    // make that one not selectable
+	chroms_parent[max_index].rfit = 0;
+	for (int i = start; i < SIZE; i++)
+		if (i != max_index && (i - 1) != max_index)                                                // in case, start is not zero(can always happen)
+			chroms_parent[i].cfit = chroms_parent[i - 1].cfit + chroms_parent[i].rfit;
+		else if ((i - 1) == max_index)
+			if ((i - 1) == 0)
+				chroms_parent[i].cfit = chroms_parent[i].rfit;
+			else if ((i - 1) > 0)
+				chroms_parent[i].cfit = chroms_parent[i - 2].cfit + chroms_parent[i].rfit;    // finish getting the cfit for all parent except one with max fitness
 }
 
 //pick a chrom base on fitness value choose next populartion
-void *pickchroms_new(chrom popnext[SIZE])
+chrom pick_parent_chrom(chrom *parent_chroms, int max_index, int *check_index)
 {
-	int i; int j;
-	double p;
-	double sum = 0.0;
-	//find the total fitness of the population
-	for (i = 0; i < SIZE; i++)
-		sum = sum + popnext[i].fit;
-	//calculate the relative fitness of each member
-	for (i = 0; i < SIZE; i++)
-		popnext[i].rfit = popnext[i].fit / sum;
-	//calculate the cumulative fitness
-	popcurrent[0].cfit = popcurrent[0].rfit;
-	for (i = 1; i < SIZE; i++)
-		popnext[i].cfit = popnext[i - 1].cfit + popnext[i].rfit;
-	for (i = 0; i < SIZE; i++)
+	double p = (1 + rand()) / (RAND_MAX + 1);                 // a random number between 0 to 1
+	chrom parent;
+	for (int i = 0; i < SIZE; i++)
 	{
-		//p = r8_uniform_ab ( 0, 1, seed ); // GENERATE RANDOM NUMBER BETWEEN 0 TO 1
-		p = rand() % 10;
-		p = p / 10;
-		if (p < popnext[0].cfit)
-			popcurrent[i] = popnext[0];
+		if (i = 0)
+			if (parent_chroms[i].cfit > p)
+			{
+				*check_index = i;
+				parent = parent_chroms[i];
+				break;
+			}
+			else{}
 		else
-			for (j = 0; j < SIZE; j++)
-				if (popnext[j].cfit <= p && p < popnext[j + 1].cfit)
-				{
-					popcurrent[i] = popcurrent[j + 1];                     // todo, here should just direct choose a parent
-
-				}
-					
+			if (parent_chroms[i].cfit > p && parent_chroms[i - 1].cfit<p)
+			{
+				*check_index = i;
+				parent = parent_chroms[i];
+				break;
+			}
 	}
-	//  Overwrite the old population with the new one.
-	for (i = 0; i < SIZE; i++)
-		popnext[i] = popcurrent[i];
-	return(0);
+	return parent;
 }
 
-double r8_uniform_ab(double a, double b, int &seed)
+void crossover(chrom *father, chrom *mother)
 {
+	srand(time(0));
+	int random = rand() % (N - 2) + 1;               // get a random number between 1 to ( N - 1 )
+	int *temp_chrom_bit = new int[random];
+	for (int i = 0; i < random; i++)                     // copy the data before random for father
 	{
-		int i4_huge = 2147483647;
-		int k;
-		double value;
-
-		if (seed == 0)
-		{
-			std::cerr << "\n";
-			std::cerr << "R8_UNIFORM_AB - Fatal error!\n";
-			std::cerr << "  Input value of SEED = 0.\n";
-			exit(1);
-		}
-
-		k = seed / 127773;
-
-		seed = 16807 * (seed - k * 127773) - k * 2836;
-
-		if (seed < 0)
-		{
-			seed = seed + i4_huge;
-		}
-
-		value = (double)(seed) * 4.656612875E-10;
-
-		value = a + (b - a) * value;
-
-		return value;
+		temp_chrom_bit[i] = father->bit[i];
+		father->bit[i] = mother->bit[i];
+		mother->bit[i] = temp_chrom_bit[i];
 	}
 }
 
-void *crossover(chrom popnext[SIZE])
+void mutation(chrom *a_chrom)
 {
-	int random;
-	int i;
+	int random = rand() % 100;
 	srand(time(0)); 
-	random = ((random % (N - 2)) + 1);                 //pick a crossover point between 1 to SIZE - 1
-	for (i = 0; i < random; i++)
+	int random_index, random_change;
+
+	if (random == 5)                       // only 1% random == 5, can be any number between 0 to 100
 	{
-		popnext[2].bit[i] = popnext[0].bit[i];   // child 1 cross over                    // rewrite crossover
-		popnext[3].bit[i] = popnext[1].bit[i];   // child 2 cross over                    // using the choosen parents to do crossover
+		random_change = rand() % ((N - 1) / 2 + 2);       // generate random index
+		random_index = rand() % N;
+		a_chrom->bit[random_index] = random_change;
 	}
-
-	for (i = random; i < 6; i++)                      // crossing the bits beyond the cross point index
-	{
-		popnext[2].bit[i] = popnext[1].bit[i];    // child 1 cross over
-		popnext[3].bit[i] = popnext[0].bit[i];    // chlid 2 cross over
-	}
-
-	for (i = 0; i < 4; i++)
-	{
-		popnext[i].fit = fitness(popnext[i]);        // 为新个体计算适应度值；
-	}
-
-	for (i = 0; i < 4; i++)
-	{
-		printf("\nCrossOver popnext[%d]=%d%d%d%d%d%d    value=%d    fitness = %d", i, popnext[i].bit[5], popnext[i].bit[4], popnext[i].bit[3], popnext[i].bit[2], popnext[i].bit[1], popnext[i].bit[0], x(popnext[i]), popnext[i].fit);
-		// 输出新个体；
-	}
-	return(0);
-}
-
-void *mutation(chrom popnext[SIZE])                //
-{
-
-	int random;
-	int row, col, value;
-	//srand(time(0)); 
-	random = rand() % 100;  // 随机产生到之间的数；
-	//变异操作也要遵从一定的概率来进行，一般设置为0到0.5之间
-	//
-	if (random == 5)                              // random==5的概率只有1%，即变异率为，所以是以小概率进行变异！！
-	{
-		col = rand() % 6;                            // 随机产生要变异的基因位号；
-		row = rand() % 4;                            // 随机产生要变异的染色体号；
-
-		if (popnext[row].bit[col] == 0)             // 1变为；
-		{
-			popnext[row].bit[col] = 1;
-		}
-		else if (popnext[row].bit[col] == 1)        // 0变为；
-		{
-			popnext[row].bit[col] = 0;
-		}
-		popnext[row].fit = y(x(popnext[row]));     // 计算变异后的适应度值；
-		value = x(popnext[row]);
-		printf("\nMutation occured in popnext[%d] bit[%d]:=%d%d%d%d%d%d    value=%d   fitness=%d", row, col, popnext[row].bit[5], popnext[row].bit[4], popnext[row].bit[3], popnext[row].bit[2], popnext[row].bit[1], popnext[row].bit[0], value, popnext[row].fit);
-
-		// 输出变异后的新个体；
-	}
-
-	return(0);
 }
