@@ -113,6 +113,9 @@ void circuit::step() {
 
 	for (int i = 0; i < this->num_node + 2; i++) {
 		// for each node, including the dummy outputs
+		// copies the current contents into the old contents - this is used for convergence checks. 
+		
+
 		unit_list[i].calc_yield();
 		// calcing the yield on each node resets the internat storage of the output nodes. 
 	}
@@ -132,26 +135,59 @@ void circuit::step() {
 	}
 }
 
-void circuit::evaluate() {
+bool circuit::evaluate() {
 	// for basic limit case - will change to convergence later.
 
-	int limit = 200;
-
+	int limit = 2000;
+	int count = 0;
+	double tolerance = 1e-4;
+	bool converged = false;
 	for (int i = 0; i < this->num_node; i++) {
 		this->unit_list[i].reset_contents();
 	}
 
-	for (int i = 0; i < limit; i++) {
-		//cout << "INDEX" << i << endl;
-		//initial feed
+	//for (int i = 0; i < limit; i++) {
+	//	//cout << "INDEX" << i << endl;
+	//	//initial feed
+	//	this->unit_list[this->adjacency_list[0]].contents[0] += 10;
+	//	this->unit_list[this->adjacency_list[0]].contents[1] += 100;
+	//	this->step();
+	//}
+	
+	while ((converged == false) && (count < limit)){
+	
 		this->unit_list[this->adjacency_list[0]].contents[0] += 10;
 		this->unit_list[this->adjacency_list[0]].contents[1] += 100;
+		converged = this->convergence_check(tolerance);
 		this->step();
+		count++;
+
 	}
 
+	//cout << "count is: " << count << endl;
 	double profit = 0;
 	profit = (this->unit_list[this->num_node].contents[0] * 100) - (this->unit_list[this->num_node].contents[1] * 500);
 
 	//cout << profit << endl;
 	this->fitness = profit;
+
+
+
+	// retuns boolean 
+	return converged;
+
+
+}
+
+bool circuit::convergence_check(double tol) {
+
+	//bool converged = true;
+	// compares itself to each cunit. if all are true return true else it returns false. 
+	for (int i = 0; i < num_node + 2; i++) {
+		if (unit_list[i].within_tol(tol) == false) {
+			return false;
+		}
+	}
+	//cout << converged << endl;
+	return true;
 }

@@ -35,6 +35,8 @@ public:
 	double conc_send[2];
 	double tail_send[2];
 	double contents[2];
+	double old_contents[2];
+	bool within_tol(double tol);
 
 	void calc_yield();
 };

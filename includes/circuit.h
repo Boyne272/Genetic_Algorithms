@@ -23,7 +23,9 @@ public:
 	~circuit();
 	double fitness = 0;
 	void step();
-	void evaluate();
+	bool evaluate();
+	bool convergence_check(double tol);
+
 	// SIMULATION TEAM CODE END.
 
 
