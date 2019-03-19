@@ -16,16 +16,16 @@ for file in files:
     if not os.path.isdir(file) and "test" in file:  # skip directories and unwanted files such as core dumps
         output = subprocess.run([file], stdout=subprocess.PIPE, universal_newlines=True)
         test_failed = False
+        print("Test ...%s output:\n" % file, output.stdout)
         if output.returncode:
             test_failed = True
         if "fail" in output.stdout:
             test_failed = True
         if test_failed:
-            print("Test ...%s \t\t failed" % file[-20:])
+            print("\t\t\t outcome = failed")
             glob_fail = True
         else:
-            print("Test ...%s output:\n", output.stdout)
-            print("Test ...%s \t\t passed" % file[-20:])
+            print("\t\t\t outcome = passed")
 
 if glob_fail:
     print("\nOne or more tests failed\n")

@@ -24,23 +24,6 @@ int main(int argc, char ** argv) {
 		return -1;
 	}
 	
-	// ---------------------- test 2 -------------------------
-
-	//	// setup invalid 6 node stysem ()
-	//circuit test_6(6);
-	//int input2[] = { 0, 1, 2, 3, 7, 1, 7, 6, 7, 6, 7, 4 ,7 };
-	//copy(input2, input2 + 13, test_6.adjacency_list);
-	//test_6.set_units();
-	
-	// run test
-	//if (!test_3.validate_simple())
-	//	//cout << "test1 simple passed\n";
-	//	return -1;
-	//if (!test_3.validate_connected())
-		//cout << "test1 connected passed\n";
-	//	return -1;
-
-
 	// ---------------------- test 3 -------------------------
 
 		// setup invalid 6 node stysem (breaks tail reach)
@@ -52,12 +35,14 @@ int main(int argc, char ** argv) {
 	test_6.set_units();
 
 	// run test
-	if (!test_6.validate_simple())
-		//cout << "test3 simple passed\n";
+	if (!test_6.validate_simple()) {
+		cout << "test3 simple failed\n";
 		return -1;
-	if (test_6.validate_connected())
-		//cout << "test3 connected failed as expected \n";
-    	return -1; 
+	}
+	if (test_6.validate_connected()) {
+		cout << "test3 connected passed when fail expected \n";
+    		return -1; 
+	}
 
 	// ---------------------- test 4 -------------------------
 
@@ -68,12 +53,14 @@ int main(int argc, char ** argv) {
 	test_6.set_units();
 
 	// run test
-	if (!test_6.validate_simple())
-		//cout << "test4 simple passed\n";
+	if (!test_6.validate_simple()) {
+		cout << "test4 simple failed\n";
 		return -1;
-	if (test_6.validate_connected())
-		//cout << "test4 connected failed as expected \n";
+	}
+	if (test_6.validate_connected()) {
+		cout << "test4 connected passed when fail expected \n";
 		return -1;
+	}
 
 
 	// ---------------------- test 6 -------------------------
@@ -84,12 +71,14 @@ int main(int argc, char ** argv) {
 	test_6.set_units();
 
 	// run test
-	if (!test_6.validate_simple())
-		//cout << "test6 simple passed\n";
+	if (!test_6.validate_simple()) {
+		cout << "test6 simple failed\n";
 		return -1;
-	if (test_6.validate_connected())
-		//cout << "test6 connected failed as expected \n";
+	}
+	if (test_6.validate_connected()) {
+		cout << "test6 connected passed when fail was expected\n";
 		return -1;
+	}
 
 
 	// ---------------------- test 7 -------------------------
@@ -100,12 +89,14 @@ int main(int argc, char ** argv) {
 	test_8.set_units();
 
 	// run test
-	if (!test_8.validate_simple())
-		//cout << "test7 simple passed\n";
+	if (!test_8.validate_simple()) {
+		cout << "test7 simple failed\n";
 		return -1;
-	if (test_8.validate_connected())
-		cout << "test7 connected failed as expected \n";
-	    return -1;
+	}
+	if (test_8.validate_connected()) {
+		cout << "test7 connected passerd when fail was expected \n";
+	    	return -1;
+	}
 
 
 	// ---------------------- test 8 -------------------------
@@ -116,12 +107,14 @@ int main(int argc, char ** argv) {
 	test_9.set_units();
 
 	// run test
-	if (!test_9.validate_simple())
-		//cout << "test8 simple passed\n";
+	if (!test_9.validate_simple()) {
+		cout << "test8 simple failed\n";
 		return - 1;
-	if (!test_9.validate_connected())
-		//cout << "test8 connected passed \n";
+	}
+	if (!test_9.validate_connected()) {
+		cout << "test8 connected failed\n";
 		return -1;
+	}
 
 	// ---------------------- done ---------------------------
 	

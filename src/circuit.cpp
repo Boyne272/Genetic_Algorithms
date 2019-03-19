@@ -54,7 +54,7 @@ void circuit::set_units() {
 		units[i].id = i;
 		units[i].out_conc	= adjacency_list[(2 * i) + 1];
 		units[i].out_tail	= adjacency_list[(2 * i) + 2];
-		units[i].mark		= false;
+		units[i].mark		= -1;
 		units[i].conc_found	= false;
 		units[i].tail_found	= false;
 		units[i].reset_contents();
