@@ -133,11 +133,11 @@ void reproduction(chrom *parent_chroms, chrom *children_chroms)
 		mother = pick_parent_chrom(parent_chroms, max_index, &mother_index);           // get a mother chrom
 		cout << "father_index " << father_index << endl;
 		cout << "mother_index " << mother_index << endl;
-		for (int i = 0; i < SIZE; i++)
+		/*for (int i = 0; i < SIZE; i++)
 		{
 			cout <<"i" << i << "r "<<parent_chroms[i].rfit << " " << endl;
 			cout << "i" << i << "c "<<parent_chroms[i].cfit << " " << endl;
-		}
+		}*/
 		
 		if (father_index != mother_index)
 		{
@@ -194,8 +194,8 @@ void update_parents_cfit(chrom *chroms_parent, int max_index)
 //pick a chrom base on fitness value choose next populartion
 chrom pick_parent_chrom(chrom *parent_chroms, int max_index, int *check_index)
 {
-	srand(time(NULL));
 	double p = (1.0 + (double)rand()) / (double)(RAND_MAX + 1);                 // a random number between 0 to 1
+	cout << p << endl;
 	chrom parent;
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -220,7 +220,6 @@ chrom pick_parent_chrom(chrom *parent_chroms, int max_index, int *check_index)
 
 void crossover(chrom *father, chrom *mother)
 {
-	srand(time(NULL));
 	int random = rand() % (N - 2) + 1;               // get a random number between 1 to ( N - 1 )
 	int *temp_chrom_bit = new int[random];
 	for (int i = 0; i < random; i++)                     // copy the data before random for father
@@ -234,7 +233,6 @@ void crossover(chrom *father, chrom *mother)
 void mutation(chrom *a_chrom)
 {
 	int random = rand() % 10;
-	srand(time(NULL)); 
 	int random_index, random_change;
 
 	if (random == 5)                       // only 1% random == 5, can be any number between 0 to 100
