@@ -21,10 +21,11 @@ for file in files:
         if "fail" in output.stdout:
             test_failed = True
         if test_failed:
-            print("Test %s failed" % file)
+            print("Test ...%s \t\t failed" % file[-20:])
             glob_fail = True
         else:
-            print("Test %s passed" % file)
+            print("Test ...%s \t\t passed" % file[-20:])
 
 if glob_fail:
+    print("\nOne or more tests failed\n")
     sys.exit(1)
