@@ -5,29 +5,33 @@
 class cunit {
 public:
 
-//	int id; // the number of this unit
-	int out_conc;
-	int out_tail;
+	int id;			// the number of this unit
+	int out_conc;	// concentrate pipe link node
+	int out_tail;	// tail pipe link node
+	int num_node;	// total number of nodes
 	
-	bool conc_mark = false;
-	bool tail_mark = false;
-	bool source_mark = false;
+	int mark = 0;
+	bool conc_found = false;
+	bool tail_found = false;
 	
-	void mark(cunit* cunits);
-	cunit(int id) : id(id) {}
+	void mark_input(cunit* units, int start_node);
+	void mark_output(cunit* units, int start_node);
+
+	//void mark(cunit* cunits);
+	//cunit(int id) : id(id) {}
+
+
+
 
 
 	// SIMULATION TEAM CODE 
 	cunit(int id, int dest_1, int dest_2);
-	// default
 	cunit();
+	// default
 	//int conc_num;
 	void reset_contents();
 	//index of the unit to which this unit’s concentrate stream is connected 
 	//int tail_num;
-	int id;// id num of the cunit.
-	//A Boolean that is changed to true if the unit has been seen 
-	//bool mark;
 	// the values to send. -i.e have to store the percentage before sending it
 	// need a send func. all the sends must come at the same time
 	// index 0 is gormanium 

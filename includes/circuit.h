@@ -4,40 +4,34 @@
 class circuit {
 public:
 	
-
-	// SET BY USER. 
-	double mutate_prob;
-	double cross_prob;
-	double num_units;
-	double ppkg_gormaium;
-	double ppkg_waste;
+		// VIRABLES SET BY USER.
+	double mutate_prob	= 0.01;
+	double cross_prob	= 0.8;
+	double ppkg_gor		= 100;
+	double ppkg_waste	= 500;
 
 	
-	// SIMULATION TEAM CODE.
-	int num_node;
-	int adj_list_length;
-	int *adjacency_list;
-	double fitness = 0;
-	// SIMULATION TEAM CODE END.
-	cunit* units;
-	
-		// run parameters
-	
+		// SIMULATION TEAM CODE.
+	int num_node;			// number of units
+	int adj_list_length;	// number of pipes
+	int *adjacency_list;	// array of pipes
+	double fitness = 0;		// fitness value
+	cunit* units;			// list of unit objects
 	
 
-		// methods
-	circuit();
-	// constructor
-	circuit(int *adjacency_array, int *adj_length); // delete later.
-	// destructor
+		// methods - setup
+	circuit(int num_nodes);
 	~circuit();
 
+		// methods - GA
 	void reproduce(circuit cother_circuit, int* &new_connections);
 
+		// methods - Validate
 	bool validate_simple();
-	void set_cunits();
+	void set_units();
 	bool validate_connected();
-	// SIMULATION METHODS.
+
+		// methods - simulation
 	void step();
 	bool evaluate();
 	bool convergence_check(double tol);	
