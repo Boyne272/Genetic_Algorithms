@@ -3,7 +3,7 @@
 #include "cunit.h"
 #include <cstdlib>
 #include <cmath>
-
+using namespace std;
 // cunits is a list of all cunit instances in order
 void cunit::mark(cunit* units) {
 
@@ -90,7 +90,7 @@ void cunit::calc_yield() {
 bool cunit::within_tol(double tol) {
 	// checks if within 
 	//cout << abs(contents[0] - old_contents[0]) << "    " << abs(contents[1] - old_contents[1]) << "     " << id <<endl;
-	if ((abs(contents[0] - old_contents[0]) < tol) && (abs(contents[1] - old_contents[1]) < tol)) {
+	if ((std::abs(contents[0] - old_contents[0]) < tol) && (std::abs(contents[1] - old_contents[1]) < tol)) {
 		//cout << "within tolerance" << endl;
 		return true;
 
