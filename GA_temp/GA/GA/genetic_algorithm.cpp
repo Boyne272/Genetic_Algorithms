@@ -4,14 +4,14 @@
 #include <time.h>
 #include <iostream>
 
-#define N 4                  //21 CELLS
-#define SIZE 10              //100 CHROMS
+#define N 8                  //21 CELLS
+#define SIZE 100              //100 CHROMS
 
 using namespace std;
 
 typedef struct Chrom
 {
-	int bit[N];             // gene of a chrom
+	double bit[N];             // gene of a chrom
 	double fit = 0;            // fitness default 0
 	double rfit = 0;        // relative fitness, the percentage of all fitness default 0
 	double cfit = 0;        // cumulative fitness default 0
@@ -22,22 +22,22 @@ void initialize(chrom *parent_chroms, chrom achrom);
 void update_parents_cfit(chrom *chroms_parent);
 void reproduction(chrom *parent_chroms, chrom *children_chroms);
 void fitness(chrom* a_chrom, chrom *cankao);
-chrom pick_parent_chrom(chrom *parent_chroms, int *check_index);
-void crossover(chrom *father, chrom *mother);
-void mutation(chrom *a_chrom);
+void pick_parents(chrom *parent_chroms, chrom *father, chrom *mother);
+void crossover(chrom *father, chrom *mother, chrom *son, chrom *daughter);
+void mutation(chrom *a_parent, chrom *a_child);
 bool valid(chrom *a_chrom);
-
+void make_child(chrom *parent_chroms, chrom *children_chroms);
 
 void main()
 {
-	int num = 1000000;                                  // iteration round£»
+	int num = 100000;                                  // iteration round£»
 	int i, Max;
 	Max = 0;
 	chrom *parent_chroms = new chrom[SIZE];
 	chrom *children_chroms = new chrom[SIZE];
 	srand(time(0));
 	chrom a_chrom;
-	for (int i = 0; i < N; i++) a_chrom.bit[i] = rand() % (1000);
+	for (int i = 0; i < N; i++) a_chrom.bit[i] = (1.0 + (double)rand()) / (double)(RAND_MAX + 1)*1000.0;
 
 	initialize(parent_chroms, a_chrom);    // generate initial population
 
@@ -45,15 +45,7 @@ void main()
 
 	for (i = 0; i < num; i++)                        //start iteration num ROUNDS
 	{
-		//cout <<endl<<endl<<"round " << i << endl;
-		//for (int k = 0; k < SIZE; k++)
-		//{
-		//	for (int j = 0; j < N; j++)
-		//		cout << parent_chroms[k].bit[j] << "   ";
-		//	//cout << "rfit =" << parent_chroms[i].rfit;
-		//	cout << " fit " << parent_chroms[k].fit;
-		//	cout << endl;
-		//}
+		
 		reproduction(parent_chroms, children_chroms);
 
 		for (int j = 0; j < SIZE; j++)
@@ -100,7 +92,7 @@ void initialize(chrom *parent_chroms, chrom a_chrom)    // generate random initi
 	{
 		for (i = 0; i < N; i++)                       // from first gene to N th gene
 		{
-			random = rand() % 1000;                 // random number between 0 to N
+			random = (1.0 + (double)rand()) / (double)(RAND_MAX + 1)*1000.0;                 // random number between 0 to N
 			parent_chroms[j].bit[i] = random;
 		}
 
@@ -108,13 +100,13 @@ void initialize(chrom *parent_chroms, chrom a_chrom)    // generate random initi
 	}
 }
 
-void fitness(chrom *a_chrom, chrom *cankao)    // get the fitness
+void fitness(chrom *a_chrom, chrom *ref)    // get the fitness
 {
 	double sum=0;
 	for (int i = 0; i < N; i++)
-		sum += (double)a_chrom->bit[i] - (double)cankao->bit[i];
+		sum += abs((double)a_chrom->bit[i] - (double)ref->bit[i]);
 	//a_chrom->fit = -abs(sum - N);
-	a_chrom->fit = -abs(sum)+1;
+	a_chrom->fit = -(sum);
 }
 
 void reproduction(chrom *parent_chroms, chrom *children_chroms)    // after reproduction, children_chroms becomes next generation
@@ -132,54 +124,39 @@ void reproduction(chrom *parent_chroms, chrom *children_chroms)    // after repr
 	// get two parents each time and do crossover
 
 	update_parents_cfit(parent_chroms);
-	int updata_index = 1, father_index, mother_index;
-	chrom father, mother;
-	
-	while (updata_index < SIZE)
-	{
-		//cout << "updata_index" << updata_index << endl;
-		father = pick_parent_chrom(parent_chroms, &father_index);           // get a father chrom
-		mother = pick_parent_chrom(parent_chroms, &mother_index);           // get a mother chrom
-		//cout << "father_index " << father_index << endl;
-		//cout << "mother_index " << mother_index << endl;
-	/*	for (int i = 0; i < SIZE; i++)
-		{
-			cout <<"i" << i << "r "<<parent_chroms[i].rfit << " " << endl;
-			cout << "i" << i << "c "<<parent_chroms[i].cfit << " " << endl;
-		}*/
-		
-		if (father_index != mother_index)
-		{
-			//crossover(&father, &mother);
-			mutation(&father);
-			mutation(&mother);
-			if (valid(&father))
-			{
-				children_chroms[updata_index] = father;
-				updata_index++;
-			}
-			if (updata_index >= SIZE)
-				break;
-			if (valid(&mother))
-			{
-				children_chroms[updata_index] = mother;
-				updata_index++;
-			}
-		}
-	}
-	//cout << "children_chroms" << endl;
-	/*for (int i = 0; i < SIZE; i++)
-	{
-		for (int j = 0; j < N; j++)
-			cout << children_chroms[i].bit[j] << "   ";
-		cout << endl;
-	}
-	cout << "reproduction finish" << endl;*/
+
+	make_child(parent_chroms, children_chroms);
 }
 
 bool valid(chrom *a_chrom)
 {
 	return true;
+}
+
+void make_child(chrom *parent_chroms, chrom *children_chroms)
+{
+	chrom father, mother, son, daughter;
+	int updata_index = 1, father_index, mother_index;
+	while (updata_index < SIZE)
+	{
+		pick_parents(parent_chroms, &father, &mother);           // get a father chrom
+
+		crossover(&father, &mother, &son, &daughter);
+		mutation(&father, &son);
+		mutation(&mother, &daughter);
+		if (valid(&son))
+		{
+			children_chroms[updata_index] = son;
+			updata_index++;
+		}
+		if (updata_index >= SIZE)
+			break;
+		if (valid(&daughter))
+		{
+			children_chroms[updata_index] = daughter;
+			updata_index++;
+		}
+	}
 }
 
 void update_parents_cfit(chrom *chroms_parent)
@@ -209,53 +186,76 @@ void update_parents_cfit(chrom *chroms_parent)
 }
 
 //pick a chrom base on fitness value choose next populartion
-chrom pick_parent_chrom(chrom *parent_chroms, int *check_index)
+void pick_parents(chrom *parent_chroms, chrom *father, chrom *mother)
 {
-	double p = (1.0 + (double)rand()) / (double)(RAND_MAX + 1);                 // a random number between 0 to 1
-	chrom parent;
-	for (int i = 0; i < SIZE; i++)
-	{
-		if (i == 0)
-			if (parent_chroms[i].cfit > p)
+	double p1;
+	double p2;
+	int father_index = 0, mother_index = 0;
+	while (father_index == mother_index) {
+		p1 = (1.0 + (double)rand()) / (double)(RAND_MAX + 1);                 // a random number between 0 to 1
+		p2 = (1.0 + (double)rand()) / (double)(RAND_MAX + 1);                 // a random number between 0 to 1
+		for (int i = 0; i < SIZE; i++)
+		{
+			if (i == 0)
 			{
-				*check_index = i;
-				parent = parent_chroms[i];
-				break;
+				if (parent_chroms[i].cfit > p1)
+				{
+					father_index = i;
+					*father = parent_chroms[i];
+					break;
+				}
+				if (parent_chroms[i].cfit > p2)
+				{
+					mother_index = i;
+					*mother = parent_chroms[i];
+					break;
+				}
 			}
-			else{}
-		else
-			if (parent_chroms[i].cfit > p && parent_chroms[i - 1].cfit < p)
+			else
 			{
-				*check_index = i;
-				parent = parent_chroms[i];
-				break;
+				if (parent_chroms[i].cfit > p1 && parent_chroms[i - 1].cfit < p1)
+				{
+					father_index = i;
+					*father = parent_chroms[i];
+					break;
+				}
+				if (parent_chroms[i].cfit > p2 && parent_chroms[i - 1].cfit < p2)
+				{
+					father_index = i;
+					*mother = parent_chroms[i];
+					break;
+				}
 			}
+		}
 	}
-	return parent;
 }
 
-void crossover(chrom *father, chrom *mother)
+void crossover(chrom *father, chrom *mother, chrom *son, chrom *daughter)
 {
 	int random = rand() % (N - 2) + 1;               // get a random number between 1 to ( N - 1 )
-	int *temp_chrom_bit = new int[random];
 	for (int i = 0; i < random; i++)                     // copy the data before random for father
 	{
-		temp_chrom_bit[i] = father->bit[i];
-		father->bit[i] = mother->bit[i];
-		mother->bit[i] = temp_chrom_bit[i];
+		son->bit[i] = father->bit[i];
+		daughter->bit[i] = mother->bit[i];
+	}
+	for (int i = random; i < N; i++)                     // copy the data before random for father
+	{
+		son->bit[i] = mother->bit[i];
+		daughter->bit[i] = father->bit[i];
 	}
 }
 
-void mutation(chrom *a_chrom)
+void mutation(chrom *a_parent, chrom* a_child)
 {
 	int random = rand() % 100;
-	int random_index, random_change;
-
+	int random_index;
+	double random_change;
+	for (int i = 0; i < N; i++)
+		a_child->bit[i] = a_parent->bit[i];
 	if (random == 5)                       // only 1% random == 5, can be any number between 0 to 100
 	{
-		//random_change = rand() % ((N - 1) / 2 + 2);       // generate random index
-		random_change = rand() % (1000);       // generate random index
-		random_index = rand() % N;
-		a_chrom->bit[random_index] = random_change;
+		random_change = (1.0 + (double)rand()) / (double)(RAND_MAX + 1)*1000.0;
+		random_index = rand() % N;               // generate random index
+		a_child->bit[random_index] = random_change;
 	}
 }
