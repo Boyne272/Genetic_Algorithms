@@ -57,6 +57,7 @@ bool circuit::validate_connected() {
 			return false;
 	}
 
+	return true;
 }
 
 // SIMULATION TEAM CODE: 
@@ -153,62 +154,4 @@ void circuit::evaluate() {
 
 	//cout << profit << endl;
 	this->fitness = profit;
-
-}
-
-int main() {
-
-	int adj_test[11]{ 0,4,3,2,0,5,4,4,6,2,1 };
-	//int adj_test[31]{ 6, 16, 7, 7, 13, 11, 12, 15, 5, 3, 6, 0, 2, 14, 12, 1, 12, 14, 11, 5, 16, 11,9, 4, 1, 0, 8, 5, 10, 2, 6 };
-	int adj_length = sizeof(adj_test) / sizeof(adj_test[0]);
-
-	circuit *test = new circuit(adj_test, &adj_length);
-
-
-	//for (int i = 0; i < 7; i++) {
-	//	test->unit_list[i].reset_contents();
-	//	cout << "ID : "<< test->unit_list[i].id << endl;
-	//	cout << "CONC: " << test->unit_list[i].conc_num << " TAIL: " << test->unit_list[i].tail_num << endl;
-	//	cout << "GORMANIUM: " << test->unit_list[i].contents[0] << " WASTE: " << test->unit_list[i].contents[1] << endl;
-	//}
-	//system("pause");
-
-	//int limit = 200;
-
-	//for (int i = 0; i < test->num_node; i++) {
-	//	test->unit_list[i].reset_contents();
-	//}
-
-	//for (int i = 0; i < limit; i++){
-	//	//cout << "INDEX" << i << endl;
-	//	//initial feed
-	//	test->unit_list[test->adjacency_list[0]].contents[0] += 10;
-	//	test->unit_list[test->adjacency_list[0]].contents[1] += 100;
-	//	test->step();
-	//}
-
-	///*test->unit_list[0].contents[0] = 10;
-	//test->unit_list[0].contents[1] = 100;
-
-	//test->step();*/
-
-	//for (int i = 0; i < test->num_node + 2; i++) {
-	//	cout << "ID : " << test->unit_list[i].id << endl;
-	//	cout << "CONTENTS: GOOD:" << test->unit_list[i].contents[0] << " BAD: " << test->unit_list[i].contents[1] << endl;
-
-	//}
-
-	//double profit = 0;
-	//profit = (test->unit_list[test->num_node].contents[0] * 100) - (test->unit_list[test->num_node].contents[1] * 500);
-	//cout << "PROFIT: " << profit << endl;
-
-
-	test->evaluate();
-
-	cout << test->fitness << endl;
-
-
-
-
-	system("pause");
 }

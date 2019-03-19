@@ -5,7 +5,7 @@
 class cunit {
 public:
 
-//	int id;
+//	int id; // the number of this unit
 	int out_conc;
 	int out_tail;
 	
