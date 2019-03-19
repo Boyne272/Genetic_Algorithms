@@ -6,7 +6,7 @@
 
 
 //int main(int argc, char** argv) {
-void tmp() {
+int tmp() {
 
 	// ---------------------- test 1 -------------------------
 
@@ -17,13 +17,15 @@ void tmp() {
 	test_3.set_units();
 
 		// run test
-	if (test_3.validate_simple())
-		cout << "test1 simple passed\n";
-	if (test_3.validate_connected())
-		cout << "test1 connected passed\n";
+	if (!test_3.validate_simple()) {
+		cout << "test1 simple failed\n";
+		return -1;
+	}
+	if (!test_3.validate_connected()) {
+		cout << "test1 connected failed\n";
+		return -1;
+	}
 	
-	system("pause");
-
 	// ---------------------- test 2 -------------------------
 
 	//	// setup invalid 6 node stysem ()
@@ -50,12 +52,14 @@ void tmp() {
 	test_6.set_units();
 
 		// run test
-	if (test_6.validate_simple())
-		cout << "test3 simple passed\n";
-	if (!test_6.validate_connected())
-		cout << "test3 connected failed as expected \n";
-
-	system("pause");
+	if (!test_6.validate_simple()) {
+		cout << "test3 simple failed\n";
+		return -1;
+	}
+	if (test_6.validate_connected()) {
+		cout << "test3 connected passed when faile was expected \n";
+		return -1;
+	}
 
 	// ---------------------- test 4 -------------------------
 
@@ -66,12 +70,14 @@ void tmp() {
 	test_6.set_units();
 
 		// run test
-	if (test_6.validate_simple())
-		cout << "test4 simple passed\n";
-	if (!test_6.validate_connected())
-		cout << "test4 connected failed as expected \n";
-
-	system("pause");
+	if (!test_6.validate_simple()) {
+		cout << "test4 simple failed\n";
+		return - 1;
+	}
+	if (test_6.validate_connected()) {
+		cout << "test4 connected passed when fail as expected \n";
+		return -1;
+	}
 
 	// ---------------------- test 5 -------------------------
 		
@@ -89,5 +95,10 @@ void tmp() {
 	//if (!test_x.validate_connected())
 	//	cout << "test5 connected failed as expected \n";
 
-	//system("pause");
+
+
+	cout << "all tests passed\n";
+	system("pause");
+
+	return 0;
 }

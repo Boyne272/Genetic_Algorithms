@@ -6,7 +6,7 @@
 
 
 int main(int argc, char** argv) {
-
+//int tmp() {
 	// ---------------------- test 1 -------------------------
 
 		// setup the circuit
@@ -16,12 +16,14 @@ int main(int argc, char** argv) {
 	copy(input1, input1 + 2*len1 + 1, test1.adjacency_list);
 
 		// run the test
+	test1.set_units();
 	test1.evaluate();
 	const double tmp1 = test1.fitness - 24.8162;
 	if (fabs(tmp1) > 0.01) {
 		cout << "failed test 1\n";
 		return -1;
 	}
+	system("pause");
 
 	// ---------------------- test 2 -------------------------
 
@@ -33,12 +35,15 @@ int main(int argc, char** argv) {
 	copy(input2, input2 + 2*len2 + 1, test2.adjacency_list);
 
 		// run the test
+	test2.set_units();
 	test2.evaluate();
 	const double tmp2 = test2.fitness - 10.4712;
 	if (fabs(tmp2) > 0.01) {
 		cout << "failed test 2\n";
 		return -1;
 	}
+
+	system("pause");
 
 	// ---------------------- test 3 -------------------------
 	// this is the same circuit as test 1 but with index ids swapped
@@ -51,12 +56,14 @@ int main(int argc, char** argv) {
 
 
 		// run the test
+	test1.set_units();
 	test1.evaluate();
 	const double tmp3 = test1.fitness - 24.8162;
 	if (fabs(tmp3) > 0.01) {
 		cout << "failed test 3\n";
 		return -1;
 	}
+	system("pause");
 
 	cout << "all test passed \n";
 	return 0;
