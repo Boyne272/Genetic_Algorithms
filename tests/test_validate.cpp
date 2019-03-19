@@ -1,4 +1,3 @@
-// Here we setup tests fot the validate methods on the circuit class
 
 #include "header.h"
 #include "circuit.h"
@@ -6,7 +5,8 @@
 
 
 //int main(int argc, char** argv) {
-void tmp() {
+int main(int argc, char ** argv)
+{
 
 	// ---------------------- test 1 -------------------------
 
@@ -16,44 +16,34 @@ void tmp() {
 	copy(input1, input1 + 7, test_3.adjacency_list);
 	test_3.set_units();
 
-		// run test
-	if (test_3.validate_simple())
-		cout << "test1 simple passed\n";
-	if (test_3.validate_connected())
-		cout << "test1 connected passed\n";
-	
+	// run test
+	if (!test_3.validate_simple())
+		//cout << "test1 simple passed\n";
+		return -1;
+	if (!test_3.validate_connected())
+		//cout << "test1 connected passed\n";
+		return -1;
+
 	system("pause");
 
-	// ---------------------- test 2 -------------------------
 
-	//	// setup invalid 6 node stysem ()
-	circuit test_6(6);
-	//int input2[] = { 0, 1, 2, 3, 7, 1, 7, 6, 7, 6, 7, 4 ,7 };
-	//copy(input2, input2 + 13, test_6.adjacency_list);
-	//test_6.set_units();
-
-
-	//	// run test
-	//if (test_6.validate_simple())
-	//	cout << "test_6 simple passed\n";
-	//if (test_6.validate_connected())
-	//	cout << "test_6 connected passed\n";
-
-	//system("pause");
-	
 	// ---------------------- test 3 -------------------------
 
 		// setup invalid 6 node stysem (breaks tail reach)
 		// here I reuse test_6 structure as should be possible
+	circuit test_6(6);
+
 	int input3[] = { 4, 2, 3, 7, 0, 5, 3, 5, 6, 0, 1, 6 ,0 };
 	copy(input3, input3 + 13, test_6.adjacency_list);
 	test_6.set_units();
 
-		// run test
-	if (test_6.validate_simple())
-		cout << "test3 simple passed\n";
-	if (!test_6.validate_connected())
-		cout << "test3 connected failed as expected \n";
+	// run test
+	if (!test_6.validate_simple())
+		//cout << "test3 simple passed\n";
+		return -1;
+	if (test_6.validate_connected())
+		//cout << "test3 connected failed as expected \n";
+    	return -1; 
 
 	system("pause");
 
@@ -65,29 +55,66 @@ void tmp() {
 	copy(input4, input4 + 13, test_6.adjacency_list);
 	test_6.set_units();
 
-		// run test
-	if (test_6.validate_simple())
-		cout << "test4 simple passed\n";
-	if (!test_6.validate_connected())
-		cout << "test4 connected failed as expected \n";
+	// run test
+	if (!test_6.validate_simple())
+		//cout << "test4 simple passed\n";
+		return -1;
+	if (test_6.validate_connected())
+		//cout << "test4 connected failed as expected \n";
+		return -1;
 
 	system("pause");
 
-	// ---------------------- test 5 -------------------------
+	// ---------------------- test 6 -------------------------
+
+		// setup invalid 6 node stysem (breaks forward reach)
 		
-	// MAKE MEEEEEEEEEEEE
-		// setup invalid 6 node stysem (breaks concentrate reach)
-		// here I reuse test_6 structure as should be possible
-	//circuit test_x(x);
-	//int input5[] = {};
-	//copy(input5, input5 + 13, test_x.adjacency_list);
-	//test_x.set_units();
 
-	//	// run test
-	//if (test_x.validate_simple())
-	//	cout << "test5 simple passed\n";
-	//if (!test_x.validate_connected())
-	//	cout << "test5 connected failed as expected \n";
+	int input6[] = { 0, 1, 2, 3, 7, 1, 7, 6, 7, 6, 7, 4 ,7 };
+	copy(input6, input6 + 13, test_6.adjacency_list);
+	test_6.set_units();
 
-	//system("pause");
+	// run test
+	if (!test_6.validate_simple())
+		//cout << "test6 simple passed\n";
+		return -1;
+	if (test_6.validate_connected())
+		//cout << "test6 connected failed as expected \n";
+		return -1;
+	system("pause");
+
+	// ---------------------- test 7 -------------------------
+	//set test for 8 nodes system (break traverse forward )
+	circuit test_8(8);
+	int input7[] = { 0, 1, 2, 8, 3, 3, 4, 8, 9, 0, 9, 6, 7 ,5, 7, 5, 6};
+	copy(input7, input7 + 17, test_8.adjacency_list);
+	test_8.set_units();
+
+	// run test
+	if (!test_8.validate_simple())
+		//cout << "test7 simple passed\n";
+		return -1;
+	if (test_8.validate_connected())
+		cout << "test7 connected failed as expected \n";
+	    return -1;
+	system("pause");
+
+	// ---------------------- test 8 -------------------------
+	//set test for valid 9 nodes system
+	circuit test_9(9);
+	int input8[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 9, 10 ,9, 10, 9, 10, 9, 10 };
+	copy(input8, input8 + 19, test_9.adjacency_list);
+	test_9.set_units();
+
+	// run test
+	if (!test_9.validate_simple())
+		//cout << "test8 simple passed\n";
+		return - 1;
+	if (!test_9.validate_connected())
+		//cout << "test8 connected passed \n";
+		return -1;
+
+	system("pause");
+
+
 }
