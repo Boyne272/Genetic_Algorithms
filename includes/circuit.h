@@ -9,7 +9,7 @@ public:
 	double out_conc = 0;
 	double out_tail = 0;
 	double fitness 	= 0;
-	// need add the cells list
+	cunit* units;
 	
 		// run parameters
 	double mutate_prob;
@@ -20,8 +20,11 @@ public:
 	
 
 		// methods
-	void reproduce(other_circuit, &new_connections);
-	bool validate();
+	circuit();
+	void reproduce(circuit cother_circuit, int* &new_connections);
+	bool validate_simple();
+	void set_cunits();
+	bool validate_connected();
 	void evaluate();
 	void costs(); 		// possibly merge with the evalutae
 	
