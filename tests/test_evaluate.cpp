@@ -28,13 +28,16 @@ int main(int argc, char** argv) {
 	circuit *test2 = new circuit(adj_test2, &adj_length2);
 	test2->evaluate();
 	
-	const double tmp2 = test2->fitness - 24.8162;
+	const double tmp2 = test2->fitness - 10.4712;
 	if (!(fabs(tmp2) < 0.01)) {
 		cout << "failed test 2\n";
 		return -1;
 	}
-
+	cout << test2->fitness << endl;
 		// finished
 	cout << "passed both tests\n";
+	
 	return 0;
+
+	
 }
