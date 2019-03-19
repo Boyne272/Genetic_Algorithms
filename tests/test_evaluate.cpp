@@ -3,6 +3,7 @@
 #include <iostream>
 #include "circuit.h"
 #include "cunit.h"
+#include <math.h>
 
 
 int main(int argc, char** argv) {
@@ -14,7 +15,8 @@ int main(int argc, char** argv) {
 	test1->evaluate();
 	
 
-	if (!(abs((double)((double)test1->fitness - (double)24.8162))  < 0.01)) {
+	const double tmp = test1->fitness - 24.8162;
+	if (!(abs(tmp) < 0.01)) {
 		cout << "failed test 1\n";
 		return -1;
 	}
@@ -26,8 +28,8 @@ int main(int argc, char** argv) {
 	circuit *test2 = new circuit(adj_test2, &adj_length2);
 	test2->evaluate();
 	
-
-	if (!(abs((double)((double)test2->fitness - (double)10.4723)) < 0.01)) {
+	const double tmp2 = test2->fitness - 24.8162;
+	if (!(abs(tmp2) < 0.01)) {
 		cout << "failed test 2\n";
 		return -1;
 	}
