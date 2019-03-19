@@ -11,6 +11,9 @@
 #include <sstream>		// for reading in string from files
 #include <fstream>		// writing/reading files
 
+<<<<<<< HEAD
 #include <algorithm>	// for copy function in tests
 
+=======
+>>>>>>> origin/Validation
 using namespace std;

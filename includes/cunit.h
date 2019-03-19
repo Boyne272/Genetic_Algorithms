@@ -14,6 +14,7 @@ public:
 	bool conc_found = false;
 	bool tail_found = false;
 	
+<<<<<<< HEAD
 	void mark_input(cunit* units, int start_node);
 	void mark_output(cunit* units, int start_node);
 
@@ -41,6 +42,9 @@ public:
 	double contents[2];
 	double old_contents[2];
 	bool within_tol(double tol);
+=======
+	void mark(cunit* units, int num_nodes);
+>>>>>>> origin/Validation
 
 	void calc_yield();
 };
