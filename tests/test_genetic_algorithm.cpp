@@ -136,7 +136,4 @@ int main(int argc, char** argv) {
 		cout << reference[i] << " ";
 	cout << "\n";
 
-		// pause system
-	system("pause");
-
 }

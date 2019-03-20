@@ -32,7 +32,6 @@ public:
 
 		// methods - GA
 	void mutate();
-	//void reproduce(circuit cother_circuit, int* &new_connections);
 
 		// methods - Validate
 	bool validate_simple();
