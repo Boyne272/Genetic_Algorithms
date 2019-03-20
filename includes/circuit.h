@@ -1,47 +1,37 @@
+#pragma once
 #include "header.h"
 #include "cunit.h"
 
 class circuit {
 public:
 	
-<<<<<<< HEAD
-		// VIRABLES SET BY USER.
+		// VIRABLES SET BY USER
+	int population = 100;
 	double mutate_prob	= 0.01;
 	double cross_prob	= 0.8;
 	double ppkg_gor		= 100;
 	double ppkg_waste	= 500;
-
-=======
-		// vairables for solving
-	int num_nodes = 3;
-	int num_pipes = 2 * num_nodes + 1;
-	int* connections;
-	double out_conc = 0;
-	double out_tail = 0;
-	double fitness 	= 0;
-	cunit* units;
->>>>>>> origin/Validation
 	
-		// SIMULATION TEAM CODE.
-	int num_node;			// number of units
-	int adj_list_length;	// number of pipes
-	int *adjacency_list;	// array of pipes
-	double fitness = 0;		// fitness value
-	cunit* units;			// list of unit objects
+		// SIMULATION VAIRABLES
+	int num_node;					// number of units
+	int adj_list_length;			// number of pipes
+	int *adjacency_list = nullptr;	// array of pipes
+	double fitness = 0;				// fitness value
+	cunit* units = nullptr;			// list of unit objects
 	
+		// GENETIC ALGORITHM VAIRABLES
+	double rfit = 0;        // relative fitness, the percentage of all fitness default 0
+	double cfit = 0;        // cumulative fitness default 0
 
-<<<<<<< HEAD
+
 		// methods - setup
+	bool default_const = true;
+	circuit() {}  // default constructor
 	circuit(int num_nodes);
 	~circuit();
 
 		// methods - GA
-=======
-		// methods
-	circuit();
-	~circuit();
->>>>>>> origin/Validation
-	void reproduce(circuit cother_circuit, int* &new_connections);
+	void mutate();
 
 		// methods - Validate
 	bool validate_simple();
