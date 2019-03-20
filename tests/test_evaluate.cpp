@@ -42,29 +42,30 @@ int main(int argc, char** argv) {
 	}
 
 
-	// ---------------------- test 3 -------------------------
-	// this is the same circuit as test 1 but with index ids swapped
-	// also recycles the circuit instance which out main code will do
+	/* ---------------------- test 3 -------------------------
+	 this is the same circuit as test 1 but with index ids swapped
+	 also recycles the circuit instance which out main code will do
 
-		// setup the circuit
-	//int len3 = 5;
-	//int input3[] = { 1, 0, 3, 2, 1, 5, 0, 0, 6, 2, 4 };
-	//copy(input3, input3 + 2 * len3 + 1, test1.adjacency_list);
+		 setup the circuit*/
+	int len3 = 5;
+	int input3[] = { 3,5,2,2,6,0,4,2,1,0,3 };
+	copy(input3, input3 + 2 * len3 + 1, test1.adjacency_list);
 
 
 		// run the test
-	//test1.set_units();
-	//test1.evaluate();
-	//const double tmp3 = test1.fitness - 24.8162;
-	//if (fabs(tmp3) > 0.01) {
-	//	cout << "failed test 3\n";
-	//	return -1;
-	//}
+	test1.set_units();
+	test1.evaluate();
+	const double tmp3 = test1.fitness - 24.8162;
+	if (fabs(tmp3) > 0.01) {
+		cout << "failed test 3\n";
+		return -1;
+	}
 
 	
 	
 	
 	cout << "all test passed \n";
+	system("pause");
 	return 0;
 
 	
