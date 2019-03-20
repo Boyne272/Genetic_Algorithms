@@ -8,9 +8,11 @@ void cunit::mark_input(cunit* units, int start_node) {
 	mark = start_node;  // mark self
 
 	for (auto node : { out_conc, out_tail })		// for each out pipe
-		if (node < num_node)						// if pipe not an exit
+		if (node < num_node) {					// if pipe not an exit
+			//cout << "we are looking at node: " << node << " from node: " << this->id << "\n";
 			if (units[node].mark != start_node)		// if pipe has not been marked
 				units[node].mark_input(units, start_node);	// mark it
+		}
 }
 
 void cunit::mark_output(cunit* units, int start_node) {

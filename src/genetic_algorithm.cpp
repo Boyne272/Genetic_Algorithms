@@ -2,9 +2,9 @@
 #include "circuit.h"
 #include "genetic_algorithm.h"
 	
-void sample_prep(circuit* parents, circuit& best_child) {
+void prep_parents(circuit* parents, circuit* best_child) {
 
-	const int population = best_child.population;
+	const int population = best_child->population;
 
 	// find max and min fitness parent
 	double max_fit = parents[0].fitness;
@@ -14,6 +14,7 @@ void sample_prep(circuit* parents, circuit& best_child) {
 	for (int i = 1; i < population; i++)
 		if (parents[i].fitness > max_fit)
 		{
+			cout << "child " << i << " beat child " << max_index << " (" << parents[i].fitness << " to " << parents[max_index].fitness << ")\n";
 			max_fit = parents[i].fitness;
 			max_index = i;
 		}
@@ -22,15 +23,17 @@ void sample_prep(circuit* parents, circuit& best_child) {
 			min_index = i;
 		}
 
-	// remain the best parent and first child
-	best_child = parents[max_index];			//////////////// watch this later
+		// remain the best parent and first child
+	cout << "max_index: " << max_index << "\n";
+	for (int i = 0; i < best_child->adj_list_length; i++)
+		best_child->adjacency_list[i] = parents[max_index].adjacency_list[i];
 
 
 		// in case thats min is negative scale all
-	if (min_fit < 0) {
+	//if (min_fit < 0) {
 		for (int i = 0; i < population; i++)
-			parents[i].fitness -= min_fit - 1; // -1 ensures positive
-	}
+			parents[i].fitness -= min_fit; // -1 ensures positive
+	//}
 
 	// find the total fitness of the population
 	double sum = 0.0;
@@ -49,8 +52,9 @@ void sample_prep(circuit* parents, circuit& best_child) {
 
 
 //pick a circuit base on fitness value choose next populartion
-void pick_parents(circuit* parents, circuit* &father, circuit* &mother, int population) {
+void pick_parents(circuit* parents, circuit* &father, circuit* &mother) {
 	
+	const int population = parents[0].population;
 	double p1, p2;
 	int father_index = 0, mother_index = 0;
 	
@@ -59,7 +63,7 @@ void pick_parents(circuit* parents, circuit* &father, circuit* &mother, int popu
 	for (int i = 0; i < population; i++) {
 		if (p1 < parents[i].cfit) {
 			father_index = i;
-			*father = parents[i];
+			father = parents + i;
 			break;
 		}
 	}	
@@ -70,7 +74,7 @@ void pick_parents(circuit* parents, circuit* &father, circuit* &mother, int popu
 		for (int i = 0; i < population; i++) {
 			if (p2 < parents[i].cfit) {
 				mother_index = i;
-				*mother = parents[i];
+				mother = parents + i;
 				break;
 			}
 		}
@@ -80,14 +84,18 @@ void pick_parents(circuit* parents, circuit* &father, circuit* &mother, int popu
 
 
 void breed(circuit *father, circuit *mother, circuit *son, circuit *daughter) {
-	const int num_genes = father->num_node;
-	const int prob_cross = father->cross_prob;
+
+	const int num_genes = father->adj_list_length;
+	const int num_node = father->num_node;
+	const double prob_cross = father->cross_prob;
+	const double mutate_prob = father->mutate_prob;
 
 		// crossover
 	int random = 0;
-	if (((double)rand() / RAND_MAX) < prob_cross) {
+	const double pick = (double)rand() / RAND_MAX;
+	if (pick < prob_cross) {
 			// get a random number between 1 to ( N - 1 ) where to swap genes
-		random = rand() % (num_genes - num_genes) + 1;
+		random = rand() % (num_genes - 2) + 1;
 	}
 
 		// put in fathers genes to son and mother genes to daughter
@@ -104,4 +112,143 @@ void breed(circuit *father, circuit *mother, circuit *son, circuit *daughter) {
 		// mutate
 	son->mutate();
 	daughter->mutate();
+}
+
+
+	// if we only weant one child at the end
+void breed(circuit *father, circuit *mother, circuit *child) {
+
+	const int num_genes = father->adj_list_length;
+	const int num_node = father->num_node;
+	const double prob_cross = father->cross_prob;
+	const double mutate_prob = father->mutate_prob;
+
+		// on a 50/50 chance swap son and daughter so it is random which one we use
+	if (rand() % 2) {
+		circuit* tmp = father;
+		father = mother;
+		mother = tmp;
+	}
+
+		// crossover
+	int random = 0;
+	const double pick = (double)rand() / RAND_MAX;
+	if (pick < prob_cross) {
+		// get a random number between 1 to ( N - 1 ) where to swap genes
+		random = rand() % (num_genes - 2) + 1;
+	}
+
+	// put in fathers genes to son and mother genes to daughter
+	for (int i = 0; i < random; i++) {
+		child->adjacency_list[i] = father->adjacency_list[i];
+	}
+	// put in mother genes to son and fathers genes to daughter
+	for (int i = random; i < num_genes; i++) {
+		child->adjacency_list[i] = mother->adjacency_list[i];
+	}
+
+		// mutate
+	child->mutate();
+}
+
+
+
+void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
+
+		// initalise the parents and childeren
+	const int pop = parents[0].population;
+	const int num_nodes = parents[0].num_node;
+	const int num_genes = parents[0].adj_list_length;
+
+
+		// find the cfit values for sampling parents and set the best child
+	prep_parents(parents, children);  // ISSUE in paralisation (only one node needs)
+		// recalculate best childs fiteness
+	children[0].set_units();
+	children[0].evaluate();
+
+	circuit* mom = nullptr;
+	circuit* dad = nullptr;  
+	int index_1(1), index_2(2);
+	bool alive_1, alive_2;
+
+	// while we want two children
+	while (index_2 < pop) {
+
+		//cout << index_1 << " " << index_2 << "\n";
+
+			// make the children
+		pick_parents(parents, mom, dad);
+		breed(mom, dad, children + index_1, children + index_2);
+		
+			// find if they survived
+
+			// child 1
+		alive_1 = false;
+		if (children[index_1].validate_simple()) {  // if passes simple tests
+			children[index_1].set_units();	// set the cuits within it
+			if (children[index_1].validate_connected())  // if passes more complex tests
+				alive_1 = children[index_1].evaluate();
+		}
+		
+			// child 2
+		alive_2 = false;
+		if (children[index_2].validate_simple()) {  // if passes simple tests
+			children[index_2].set_units();	// set the cuits within it
+			if (children[index_2].validate_connected())  // if passes more complex tests
+				alive_2 = children[index_2].evaluate();
+		}
+		
+		
+		// if they both survived
+		if (alive_1 && alive_2) {
+				// update the indexs
+			index_1 = index_2 + 1;
+			index_2 += 2;
+		}
+		// if one survived
+		else if (!alive_1 && alive_2) {
+				// update the survived index
+			index_2 += 1;
+		}
+		// if the other survived
+		else if (alive_1 && !alive_2) {
+				// update the survived index
+			index_1 = index_2; //swap so index_1 < index_2
+			index_2 += 1;
+		}
+	}
+
+	// if we still need one child at the end
+	while (index_1 < pop) {
+
+		// make a single child
+		pick_parents(parents, mom, dad);
+		breed(mom, dad, children + index_1);
+
+		// child 1
+		alive_1 = false;
+		if (children[index_1].validate_simple()) {  // if passes simple tests
+			children[index_1].set_units();	// set the cuits within it
+			if (children[index_1].validate_connected())  // if passes more complex tests
+				alive_1 = children[index_1].evaluate();
+		}
+
+		// if it survived break the loop
+		if (alive_1)
+			index_1 = pop;
+	}
+
+	// print the best child
+	cout << "best child: ";
+	for (int i = 0; i < num_nodes * 2 + 1; i++)
+		cout << children[0].adjacency_list[i] << " ";
+	cout << " value: " << children[0].fitness << "\n";
+
+	// swap parent and child list
+	circuit* tmp = parents;
+	parents = children;
+	children = tmp;
+	//system("pause");
+
 }
