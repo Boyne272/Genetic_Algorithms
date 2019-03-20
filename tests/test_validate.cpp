@@ -1,8 +1,8 @@
+// Here we setup tests fot the validate methods on the circuit class
 
 #include "header.h"
 #include "circuit.h"
 #include "cunit.h"
-
 
 int main(int argc, char ** argv) {
 
@@ -122,3 +122,4 @@ int main(int argc, char ** argv) {
 	return 0;
 
 }
+

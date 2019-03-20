@@ -1,0 +1,7 @@
+﻿  genetic_algorithm.cpp
+c:\users\ys8718\documents\msc\acse4\project3\ga_temp\ga\ga\genetic_algorithm.cpp(32): warning C4326: return type of 'main' should be 'int' instead of 'void'
+c:\users\ys8718\documents\msc\acse4\project3\ga_temp\ga\ga\genetic_algorithm.cpp(38): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\ys8718\documents\msc\acse4\project3\ga_temp\ga\ga\genetic_algorithm.cpp(95): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\ys8718\documents\msc\acse4\project3\ga_temp\ga\ga\genetic_algorithm.cpp(139): warning C4101: 'mother_index': unreferenced local variable
+c:\users\ys8718\documents\msc\acse4\project3\ga_temp\ga\ga\genetic_algorithm.cpp(139): warning C4101: 'father_index': unreferenced local variable
+  GA.vcxproj -> C:\Users\ys8718\Documents\MSC\Acse4\Project3\GA_temp\GA\x64\Debug\GA.exe

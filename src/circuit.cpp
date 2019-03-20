@@ -2,6 +2,7 @@
 #include "circuit.h"
 #include "cunit.h"
 
+<<<<<<< HEAD
 using namespace std;
 
 // -------------------------- setup ------------------------------
@@ -17,6 +18,20 @@ circuit::circuit(int num_node) : num_node(num_node), adj_list_length(1 + 2*num_n
 
 		// setup the adjasency list
 	adjacency_list = new int[adj_list_length];
+=======
+circuit::circuit() {
+
+		// initalise the cunits
+	units = new cunit[num_nodes];
+	for (int i = 0; i < num_nodes; i++)
+		units[i].id = i;
+
+}
+
+circuit::~circuit() {
+
+	delete[] this->units;
+>>>>>>> origin/Validation
 
 }
 
@@ -31,9 +46,12 @@ circuit::~circuit()
 bool circuit::validate_simple() {
 
 		// for every nodes two pipes (not source pipe)
+<<<<<<< HEAD
 	for (int i = 1; i < adj_list_length; i+=2) {
+=======
+	for (int i = 1; i < num_pipes; i+=2) {
+>>>>>>> origin/Validation
 		const int node = (i - 1) / 2;
-		
 			// conc and tail pipes have same target node
 		if (adjacency_list[i] == adjacency_list[i + 1])
 			return false;
@@ -49,6 +67,7 @@ bool circuit::validate_simple() {
 
 void circuit::set_units() {
 
+<<<<<<< HEAD
 		// set all internal nodes to new adjaceny list
 	for (int i = 0; i < this->num_node; i++) {
 		units[i].id = i;
@@ -58,6 +77,14 @@ void circuit::set_units() {
 		units[i].conc_found	= false;
 		units[i].tail_found	= false;
 		units[i].reset_contents();
+=======
+	for (int i = 0; i < num_nodes; i++) {
+		units[i].out_conc = connections[2 * i + 1];
+		units[i].out_tail = connections[2 * i + 2];
+		units[i].conc_mark = false;
+		units[i].tail_mark = false;
+		units[i].source_mark = false;
+>>>>>>> origin/Validation
 	}
 
 		// for the two exit nodes
@@ -70,6 +97,7 @@ void circuit::set_units() {
 
 bool circuit::validate_connected() {
 
+<<<<<<< HEAD
 		// start enterance test
 	const int in_node = adjacency_list[0];
 	units[in_node].mark_input(units, in_node);
@@ -207,3 +235,19 @@ bool circuit::convergence_check(double tol) {
 	}
 	return true;
 }
+=======
+		// set the input pipe to start marking nodes
+	units[connections[0]].mark(units, num_nodes);
+
+		// check all nodes see source and both exits
+	for (int i = 0; i < num_nodes; i++) {
+		if (!units[i].conc_mark)
+			return false;
+		if (!units[i].tail_mark)
+			return false;
+		if (!units[i].source_mark)
+			return false;
+	}
+	return true;
+}
+>>>>>>> origin/Validation
