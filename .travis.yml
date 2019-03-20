@@ -11,7 +11,7 @@ before_install:
 script:
   - make clean
   - make all
-  - make cleantest
+  - make cleantests
   - make tests
   - make runtests
 
