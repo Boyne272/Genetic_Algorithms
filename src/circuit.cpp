@@ -53,6 +53,15 @@ bool circuit::validate_simple() {
 			return false;
 	}
 
+	// check if every node appears before 
+	for (int i = 0; i < numb_node; i++) {
+		for (int j = 0; j < 2 * i + 1; j++) {
+			if (!adjacency_list[j] == i) {
+				return false;
+			}
+		}
+	}
+
 		// check the input node is not an exit node
 	if (adjacency_list[0] >= num_node)
 		return false;
@@ -96,7 +105,7 @@ bool circuit::validate_connected() {
 		// for each node do the exit tests
 	for (int i = 0; i < num_node; i++) {
 
-			// the source node by reaching very other node much reach both exits
+			// the source node by reaching every other node much reach both exits
 		if (i == adjacency_list[0])
 			continue;
 
