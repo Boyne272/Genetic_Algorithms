@@ -179,9 +179,7 @@ bool circuit::evaluate() {
 		this->fitness = profit;
 	}
 
-
-
-	// retuns boolean 
+		// retruns boolean on wether converged or not
 	return converged;
 }
 

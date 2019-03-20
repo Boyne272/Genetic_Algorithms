@@ -16,7 +16,7 @@ public:
 	int num_node;					// number of units
 	int adj_list_length;			// number of pipes
 	int *adjacency_list = nullptr;	// array of pipes
-	double fitness = 0;				// fitness value
+	double fitness;					// fitness value
 	cunit* units = nullptr;			// list of unit objects
 	
 		// GENETIC ALGORITHM VAIRABLES
