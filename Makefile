@@ -64,7 +64,7 @@ $(TEST_BIN_DIR)/test_evaluate: $(TEST_BUILD_DIR)/test_evaluate.o $(BUILD_DIR)/ci
 # genetic_algorithm test
 test_genetic_algorithm: $(TEST_BIN_DIR)/test_genetic_algorithm
 
-$(TEST_BIN_DIR)/test_genetic_algorithm: $(TEST_BUILD_DIR)/test_genetic_algorithm.o #$(BUILD_DIR)/additional dependencies
+$(TEST_BIN_DIR)/test_genetic_algorithm: $(TEST_BUILD_DIR)/test_genetic_algorithm.o $(BUILD_DIR)/circuit.o
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 
