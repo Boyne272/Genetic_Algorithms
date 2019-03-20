@@ -41,4 +41,6 @@ public:
 	void step();
 	bool evaluate();
 	bool convergence_check(double tol);	
+		// methods - analysis
+	void analysis();
 };

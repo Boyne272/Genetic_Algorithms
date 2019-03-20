@@ -205,3 +205,46 @@ void circuit::mutate()
 		}
 	}
 }
+
+// ------------------------- analysis ------------------------------------
+
+void circuit::analysis()
+{
+	for (int i = 0; i < this->num_node; i++) {
+		// find the unit each pipe sends to and add the material sent by unit[i].
+
+		const int conc = (units[i].out_conc); // slow?
+
+		units[conc].num_tot_feeds += 1;
+		units[conc].num_conc_feeds+= 1;
+		
+		const int tail = (units[i].out_tail); // slow?
+
+		units[tail].num_tot_feeds += 1;
+		units[tail].num_tail_feeds += 1;
+	}
+	
+	units[this->adjacency_list[0]].num_tot_feeds += 1; // accounting for origional feed.
+
+
+	// find max node. 
+	int max_list[]{ 0,0,0 }; // total, conc, tail
+	int max_id_list[]{ 0,0,0 };
+
+	for (int i = 0; i < this->num_node; i++) {
+		cout << "CELL: " << units[i].id << " Total: " << units[i].num_tot_feeds << " Conc: " << units[i].num_conc_feeds << " Tail: " << units[i].num_tail_feeds << endl;
+		if (units[i].num_tot_feeds > max_list[0]) {
+			max_list[0] = units[i].num_tot_feeds;
+			max_id_list[0] = units[i].id;
+		}
+		if (units[i].num_conc_feeds > max_list[1]) {
+			max_list[1] = units[i].num_conc_feeds;
+			max_id_list[1] = units[i].id;
+		}
+		if (units[i].num_tot_feeds > max_list[1]) {
+			max_list[1] = units[i].num_tot_feeds;
+			max_id_list[1] = units[i].id;
+		}
+
+	}
+}
