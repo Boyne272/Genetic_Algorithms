@@ -53,6 +53,17 @@ bool circuit::validate_simple() {
 			return false;
 	}
 
+		// check if every node is present
+	for (int i = 0; i < num_node; i++) {
+		bool found = false;
+		for (int j = 0; j < adj_list_length; j++) {
+			if (adjacency_list[j] == i)
+				found = true;
+		}
+		if (!found)
+			return false;
+	}
+
 		// check the input node is not an exit node
 	if (adjacency_list[0] >= num_node)
 		return false;
@@ -96,7 +107,7 @@ bool circuit::validate_connected() {
 		// for each node do the exit tests
 	for (int i = 0; i < num_node; i++) {
 
-			// the source node by reaching very other node much reach both exits
+			// the source node by reaching every other node much reach both exits
 		if (i == adjacency_list[0])
 			continue;
 
@@ -179,9 +190,7 @@ bool circuit::evaluate() {
 		this->fitness = profit;
 	}
 
-
-
-	// retuns boolean 
+		// retruns boolean on wether converged or not
 	return converged;
 }
 

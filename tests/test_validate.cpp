@@ -71,7 +71,7 @@ int main(int argc, char ** argv) {
 	test_6.set_units();
 
 	// run test
-	if (!test_6.validate_simple()) {
+	if (test_6.validate_simple()) { //expected to fail
 		cout << "test6 simple failed\n";
 		return -1;
 	}
