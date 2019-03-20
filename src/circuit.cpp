@@ -134,12 +134,15 @@ void circuit::step() {
 	for (int i = 0; i < this->num_node; i++) {
 		// find the unit each pipe sends to and add the material sent by unit[i].
 
-		const int conc = (units[i].out_conc);
+
+		const int conc = (units[i].out_conc); // slow?
+
 
 		units[conc].contents[0] += units[i].conc_send[0];
 		units[conc].contents[1] += units[i].conc_send[1];
 
-		const int tail = (units[i].out_tail);
+		const int tail = (units[i].out_tail); // slow?
+
 		units[tail].contents[0] += units[i].tail_send[0];
 		units[tail].contents[1] += units[i].tail_send[1];
 	}
@@ -150,21 +153,24 @@ bool circuit::evaluate() {
 	// limit is maximum number of iterations if no convergence. 
 	int limit = 2000;
 	int count = 0;
-	double tolerance = 1e-4;
+	double tolerance = 1e-6;
 	bool converged = false;
+	bool convergence_debug_flag = false;
 
 
 	for (int i = 0; i < this->num_node; i++) {
-		this->units[i].reset_contents();
+		this->units[i].reset_contents(); // sets contets to 10 gormanium 100 waste.
 	}
 
 	while ((converged == false) && (count < limit)){
-		this->units[this->adjacency_list[0]].contents[0] += 10;
+		this->units[this->adjacency_list[0]].contents[0] += 10; // input feed to the circuit. 
 		this->units[this->adjacency_list[0]].contents[1] += 100;
 		converged = this->convergence_check(tolerance);
 		this->step();
 		count++;
 	}
+
+	if (convergence_debug_flag) cout << "count was: " << count << endl;
 
 
 	double profit = 0;
@@ -212,5 +218,48 @@ void circuit::mutate()
 			random_change = rand() % (num_node + 2);  //////////////// at moment change to random value
 			this->adjacency_list[i] = random_change;
 		}
+	}
+}
+
+// ------------------------- analysis ------------------------------------
+
+void circuit::analysis()
+{
+	for (int i = 0; i < this->num_node; i++) {
+		// find the unit each pipe sends to and add the material sent by unit[i].
+
+		const int conc = (units[i].out_conc); // slow?
+
+		units[conc].num_tot_feeds += 1;
+		units[conc].num_conc_feeds+= 1;
+		
+		const int tail = (units[i].out_tail); // slow?
+
+		units[tail].num_tot_feeds += 1;
+		units[tail].num_tail_feeds += 1;
+	}
+	
+	units[this->adjacency_list[0]].num_tot_feeds += 1; // accounting for origional feed.
+
+
+	// find max node. 
+	int max_list[]{ 0,0,0 }; // total, conc, tail
+	int max_id_list[]{ 0,0,0 };
+
+	for (int i = 0; i < this->num_node; i++) {
+		cout << "CELL: " << units[i].id << " Total: " << units[i].num_tot_feeds << " Conc: " << units[i].num_conc_feeds << " Tail: " << units[i].num_tail_feeds << endl;
+		if (units[i].num_tot_feeds > max_list[0]) {
+			max_list[0] = units[i].num_tot_feeds;
+			max_id_list[0] = units[i].id;
+		}
+		if (units[i].num_conc_feeds > max_list[1]) {
+			max_list[1] = units[i].num_conc_feeds;
+			max_id_list[1] = units[i].id;
+		}
+		if (units[i].num_tot_feeds > max_list[1]) {
+			max_list[1] = units[i].num_tot_feeds;
+			max_id_list[1] = units[i].id;
+		}
+
 	}
 }

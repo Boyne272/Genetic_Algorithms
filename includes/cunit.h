@@ -9,10 +9,14 @@ public:
 	int out_conc;	// concentrate pipe link node
 	int out_tail;	// tail pipe link node
 	int num_node;	// total number of nodes
+	int num_tot_feeds = 0; // total number of feeds leeding into cell.
+	int num_conc_feeds = 0; // total number of gormanium feeds going into cell.
+	int num_tail_feeds = 0;  // total number of waste feeds going into cell.
 	
 	int mark = 0;				// mark if this node has been reached by another node
 	bool conc_found = false;	// mark if this node can find conc exit
 	bool tail_found = false;	// mark if this node can find tail exit
+
 	
 	void mark_input(cunit* units, int start_node);
 	void mark_output(cunit* units, int start_node);
