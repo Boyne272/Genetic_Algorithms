@@ -71,7 +71,7 @@ $(TEST_BIN_DIR)/test_genetic_algorithm: $(TEST_BUILD_DIR)/test_genetic_algorithm
 # validation test
 test_validate: $(TEST_BIN_DIR)/test_validate
 
-$(TEST_BIN_DIR)/test_validate: $(TEST_BUILD_DIR)/test_valida:te.o $(BUILD_DIR)/circuit.o $(BUILD_DIR)/cunit.o
+$(TEST_BIN_DIR)/test_validate: $(TEST_BUILD_DIR)/test_validate.o $(BUILD_DIR)/circuit.o $(BUILD_DIR)/cunit.o
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 
