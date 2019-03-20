@@ -53,13 +53,15 @@ bool circuit::validate_simple() {
 			return false;
 	}
 
-	// check if every node appears before 
-	for (int i = 0; i < numb_node; i++) {
-		for (int j = 0; j < 2 * i + 1; j++) {
-			if (!adjacency_list[j] == i) {
-				return false;
-			}
+		// check if every node is present
+	for (int i = 0; i < num_node; i++) {
+		bool found = false;
+		for (int j = 0; j < adj_list_length; j++) {
+			if (adjacency_list[j] == i)
+				found = true;
 		}
+		if (!found)
+			return false;
 	}
 
 		// check the input node is not an exit node
