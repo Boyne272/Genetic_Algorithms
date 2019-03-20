@@ -11,6 +11,8 @@ public:
 	double cross_prob	= 0.8;
 	double ppkg_gor		= 100;
 	double ppkg_waste	= 500;
+	double ga_tol		= 1000;	// IMPLEMENT ME!!!
+	double sim_tol		= 0.001;
 	
 		// SIMULATION VAIRABLES
 	int num_node;					// number of units
