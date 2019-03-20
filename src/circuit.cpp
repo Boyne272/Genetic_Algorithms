@@ -121,11 +121,13 @@ void circuit::step() {
 	for (int i = 0; i < this->num_node; i++) {
 		// find the unit each pipe sends to and add the material sent by unit[i].
 
-		const int conc = (units[i].out_conc);
+		const int conc = (units[i].out_conc); // slow?
+
 		units[conc].contents[0] += units[i].conc_send[0];
 		units[conc].contents[1] += units[i].conc_send[1];
 
-		const int tail = (units[i].out_tail);
+		const int tail = (units[i].out_tail); // slow?
+
 		units[tail].contents[0] += units[i].tail_send[0];
 		units[tail].contents[1] += units[i].tail_send[1];
 	}
@@ -136,21 +138,24 @@ bool circuit::evaluate() {
 	// limit is maximum number of iterations if no convergence. 
 	int limit = 2000;
 	int count = 0;
-	double tolerance = 1e-4;
+	double tolerance = 1e-6;
 	bool converged = false;
+	bool convergence_debug_flag = false;
 
 
 	for (int i = 0; i < this->num_node; i++) {
-		this->units[i].reset_contents();
+		this->units[i].reset_contents(); // sets contets to 10 gormanium 100 waste.
 	}
 
 	while ((converged == false) && (count < limit)){
-		this->units[this->adjacency_list[0]].contents[0] += 10;
+		this->units[this->adjacency_list[0]].contents[0] += 10; // input feed to the circuit. 
 		this->units[this->adjacency_list[0]].contents[1] += 100;
 		converged = this->convergence_check(tolerance);
 		this->step();
 		count++;
 	}
+
+	if (convergence_debug_flag) cout << "count was: " << count << endl;
 
 
 	double profit = 0;

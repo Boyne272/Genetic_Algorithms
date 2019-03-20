@@ -9,6 +9,7 @@ int main(int argc, char** argv) {
 	// ---------------------- test 1 -------------------------
 
 		// setup the circuit
+	bool fail_check;
 	int len1 = 5;
 	circuit test1(len1);
 	int input1[] = { 0, 4, 3, 2, 0, 5, 4, 4, 6, 2, 1 };
@@ -16,7 +17,8 @@ int main(int argc, char** argv) {
 
 		// run the test
 	test1.set_units();
-	test1.evaluate();
+	fail_check = test1.evaluate();
+	
 	const double tmp1 = test1.fitness - 24.8162;
 	if (fabs(tmp1) > 0.01) {
 		cout << "failed test 1\n";
@@ -48,25 +50,70 @@ int main(int argc, char** argv) {
 
 		 setup the circuit*/
 	int len3 = 5;
-	int input3[] = { 3,5,2,2,6,0,4,2,1,0,3 };
+	int input3[] = { 0, 4, 3, 2, 0, 5, 4, 4, 6, 2, 1 };
 	copy(input3, input3 + 2 * len3 + 1, test1.adjacency_list);
-
 
 		// run the test
 	test1.set_units();
+
 	test1.evaluate();
+
 	const double tmp3 = test1.fitness - 24.8162;
 	if (fabs(tmp3) > 0.01) {
 		cout << "failed test 3\n";
 		return -1;
 	}
 
-	
+	// -----------------------test 4-------------------------
+	// tests bool return on non covergence.
+	// this will fail to converge. It will then be flagged as diverging - if it is correctly identified as diverging the test will pass.
+	int len4 = 5;
+	int input4[] = { 0, 0, 0, 2, 0, 5, 4, 3, 6, 2, 1 };
+	copy(input4, input4 + 2 * len4 + 1, test1.adjacency_list);
+
+	// run the test
+	test1.set_units();
+
+	fail_check = test1.evaluate();
+
+	if (fail_check) {
+		cout << "failed test 4\n";
+		return -1;
+	}
 	
 	
 	cout << "all test passed \n";
-	system("pause");
+
 	return 0;
+
+
+
+
+
+
+	//int input3[] = { 3,5,2,2,6,0,4,2,1,0,3 };
+
+//int input3[] = { 0, 4, 1, 2, 3, 5, 4, 4, 6, 2, 1 };
+
+
+	//for (int i = 0; i < test1.num_node + 2; i++) {
+	//	cout << "old contents: " << test1.units[i].id << " gormanium: " << test1.units[i].contents[0] << " waste: " << test1.units[i].contents[1] << endl;
+	//}
+
+	//for (int i = 0; i < test1.num_node + 2; i++) {
+	//	cout << "old contents: " << test1.units[i].id << " gormanium: " << test1.units[i].contents[0] << " waste: " << test1.units[i].contents[1] << endl;
+	//}
+	//for (int i = 0; i < test1.num_node + 2; i++) {
+	//	cout << "old contents: " << test1.units[i].id << " gormanium: " << test1.units[i].old_contents[0] << " waste: " << test1.units[i].old_contents[1] << endl;
+	//}
+	//for (int i = 0; i < test1.num_node + 2; i++) {
+	//	test1.units[i].old_contents[0]  = test1.units[i].contents[0];
+	//	test1.units[i].old_contents[1] = test1.units[i].contents[1];
+	//}
+
+
+
+
 
 	
 }

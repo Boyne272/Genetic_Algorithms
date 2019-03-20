@@ -92,13 +92,30 @@ cunit::cunit(int id, int dest_1, int dest_2) : id(id), out_conc(dest_1), out_tai
 }
 
 void cunit::reset_contents() {
+	int test_mode = 2; // parameter for testing different methods of initialisation 
+
+	if (test_mode == 2) {
+		this->contents[0] = this->old_contents[0]; // changed to initialise with full pipes - converges faster.
+		this->contents[1] = this->old_contents[1];
+
+	}
 	for (int i = 0; i < 2; i++) {
 		// initialise values.
 		this->old_contents[i] = 1; 
 		// resets old contents as differently to contents 
 		// this means that they will not be detected as converged on the first step.
-		this->contents[i] = 0;
+		if (test_mode == 0) {
+			this->contents[i] = 0;
+		}
+		
 	}
+	if (test_mode == 1) {
+		this->contents[0] = 10; // changed to initialise with full pipes - converges faster.
+		this->contents[1] = 100;
+	}
+
+
+	
 }
 void cunit::calc_yield() {
 	// first the conc to send
