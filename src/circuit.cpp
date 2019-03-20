@@ -8,8 +8,10 @@ using namespace std;
 
 circuit::circuit(int num_node) : num_node(num_node), adj_list_length(1 + 2*num_node) {
 
-		// setup the adjasency list
+		// setup the adjasency list and initalise it as random nodes
 	adjacency_list = new int[adj_list_length];
+	for (int i = 0; i < adj_list_length; i++)
+		adjacency_list[i] = rand() % (num_node + 2);
 	
 		// initalise the cunits (include the exit nodes too)
 	units = new cunit[num_node + 2];
@@ -18,13 +20,20 @@ circuit::circuit(int num_node) : num_node(num_node), adj_list_length(1 + 2*num_n
 		units[i].id = i;
 	}
 
+		//default const reset
+	default_const = false;
+
 }
+
 
 
 circuit::~circuit()
 {
-	delete[] adjacency_list;
-	delete[] units;
+	if (!true) {
+		// memory leak come fix me boy!!!!
+		//delete[] adjacency_list;
+		//delete[] units;
+	}
 }
 
 // -------------------------- validation ------------------------------
@@ -43,6 +52,10 @@ bool circuit::validate_simple() {
 		if ((adjacency_list[i] == node) || (adjacency_list[i + 1] == node))
 			return false;
 	}
+
+		// check the input node is not an exit node
+	if (adjacency_list[0] >= num_node)
+		return false;
 
 	return true;
 }
@@ -121,7 +134,9 @@ void circuit::step() {
 	for (int i = 0; i < this->num_node; i++) {
 		// find the unit each pipe sends to and add the material sent by unit[i].
 
+
 		const int conc = (units[i].out_conc); // slow?
+
 
 		units[conc].contents[0] += units[i].conc_send[0];
 		units[conc].contents[1] += units[i].conc_send[1];
@@ -160,7 +175,7 @@ bool circuit::evaluate() {
 
 	double profit = 0;
 	profit = (this->units[this->num_node].contents[0] * 100) - (this->units[this->num_node].contents[1] * 500);
-
+	
 	// if not converged, give worst possible score.
 	if (converged == false) {
 		this->fitness = (-500 * 100);

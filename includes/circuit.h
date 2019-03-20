@@ -1,3 +1,4 @@
+#pragma once
 #include "header.h"
 #include "cunit.h"
 
@@ -12,11 +13,11 @@ public:
 	double ppkg_waste	= 500;
 	
 		// SIMULATION VAIRABLES
-	int num_node;			// number of units
-	int adj_list_length;	// number of pipes
-	int *adjacency_list;	// array of pipes
-	double fitness = 0;		// fitness value
-	cunit* units;			// list of unit objects
+	int num_node;					// number of units
+	int adj_list_length;			// number of pipes
+	int *adjacency_list = nullptr;	// array of pipes
+	double fitness = 0;				// fitness value
+	cunit* units = nullptr;			// list of unit objects
 	
 		// GENETIC ALGORITHM VAIRABLES
 	double rfit = 0;        // relative fitness, the percentage of all fitness default 0
@@ -24,8 +25,9 @@ public:
 
 
 		// methods - setup
-	circuit(int num_nodes);
+	bool default_const = true;
 	circuit() {}  // default constructor
+	circuit(int num_nodes);
 	~circuit();
 
 		// methods - GA
