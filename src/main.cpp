@@ -33,8 +33,8 @@ void read_file(ifstream& file, double& val) {
 int main(int argc, char *argv[]) {
 	
 		// seed the RNG
-	srand(time(NULL));
-	//srand(1);
+	//srand(time(NULL));
+	srand(100);
 	
 		// open config file
 	ifstream config;
