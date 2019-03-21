@@ -35,6 +35,10 @@ int main(int argc, char *argv[]) {
 		// seed the RNG
 	//srand(time(NULL));
 	srand(100);
+	// parameters to solve for
+	//const int population = 100;
+	//const int num_unit = 5;
+	//const int iterations = 2000;	// to be safe
 	
 		// open config file
 	ifstream config;
@@ -78,12 +82,12 @@ int main(int argc, char *argv[]) {
 	for (int i = 0; i < population; i++) {
 		children[i] = circuit(num_unit, population);
 
-		children[i].cross_prob	= parents[i].cross_prob = cross_prob;
-		children[i].mutate_prob = parents[i].mutate_prob = mute_prob;
-		children[i].ppkg_gor	= parents[i].ppkg_gor = ppk_gorm;
-		children[i].ppkg_waste	= parents[i].ppkg_waste = ppk_waste;
-		children[i].ga_tol		= parents[i].ga_tol = ga_tol;
-		children[i].sim_tol		= parents[i].sim_tol = ga_tol;
+		children[i].cross_prob	= parents[i].cross_prob		= cross_prob;
+		children[i].mutate_prob	= parents[i].mutate_prob	= mute_prob;
+		children[i].ppkg_gor	= parents[i].ppkg_gor		= ppk_gorm;
+		children[i].ppkg_waste	= parents[i].ppkg_waste		= ppk_waste;
+		children[i].ga_tol		= parents[i].ga_tol			= ga_tol;
+		children[i].sim_tol		= parents[i].sim_tol		= sim_tol;
 
 	}
 
