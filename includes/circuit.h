@@ -6,13 +6,14 @@ class circuit {
 public:
 	
 		// VIRABLES SET BY USER
-	int population = 100;
-	double mutate_prob	= 0.01;
-	double cross_prob	= 0.8;
-	double ppkg_gor		= 100;
-	double ppkg_waste	= 500;
-	double ga_tol		= 1000;	// IMPLEMENT ME!!!
-	double sim_tol		= 0.001;
+	int population = 100;			// the total number of circuits
+	int my_population = 100;		// total circuits solved by this CPU (parallel)
+	double mutate_prob	= 0.01;		// probability of mutating
+	double cross_prob	= 0.8;		// probability of ginetic crossing
+	double ppkg_gor		= 100;		// price per kg gormanium
+	double ppkg_waste	= 500;		// cost per kg waste
+	double ga_tol		= 1000;		// IMPLEMENT ME!!!
+	double sim_tol		= 0.001;	// IMPLEMENT ME!!!
 	
 		// SIMULATION VAIRABLES
 	int num_node;					// number of units

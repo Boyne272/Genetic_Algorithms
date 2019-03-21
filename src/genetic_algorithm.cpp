@@ -254,9 +254,5 @@ void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
 		cout << " value: " << children[0].fitness << "\n";
 	#endif // PRINT
 
-		// swap parent and child list
-	circuit* tmp = parents;
-	parents = children;
-	children = tmp;
 
 }

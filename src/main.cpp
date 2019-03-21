@@ -70,6 +70,8 @@ int main(int argc, char *argv[]) {
 	for (int i = 0; i < population; i++) {
 		children[i] = circuit(num_unit);
 
+		children->population = parents->population = population;
+		children->my_population = parents->my_population = population;
 		children->cross_prob = parents->cross_prob = cross_prob;
 		children->mutate_prob = parents->mutate_prob = mute_prob;
 		children->ppkg_gor = parents->ppkg_gor = ppk_gorm;
@@ -79,12 +81,17 @@ int main(int argc, char *argv[]) {
 
 	}
 
-		// iterate to solve
-	for (int it = 0; it < iterations; it++) 
+	for (int it = 0; it < iterations; it++) {
+			// iterate
 		iterate_alg(parents, children, population);
+			// swap parent and child list
+		circuit* tmp = parents;
+		parents = children;
+		children = tmp;
+	}
 	
 
-		// write the output IMPLEMENT ME!!
+		// write the output IMPLEMENT ME!!x
 
 
 	system("pause");
