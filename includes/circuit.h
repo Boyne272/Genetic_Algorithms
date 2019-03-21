@@ -6,7 +6,6 @@ class circuit {
 public:
 	
 		// VIRABLES SET BY USER
-	int population = 100;			// the total number of circuits
 	double mutate_prob	= 0.01;		// probability of mutating
 	double cross_prob	= 0.8;		// probability of ginetic crossing
 	double ppkg_gor		= 100;		// price per kg gormanium
@@ -15,6 +14,7 @@ public:
 	double sim_tol		= 0.001;	// IMPLEMENT ME!!!
 	
 		// SIMULATION VAIRABLES
+	int population;					// the total number of circuits
 	int num_node;					// number of units
 	int adj_list_length;			// number of pipes
 	int *adjacency_list = nullptr;	// array of pipes
@@ -29,7 +29,7 @@ public:
 		// methods - setup
 	bool default_const = true;
 	circuit() {}  // default constructor
-	circuit(int num_nodes);
+	circuit(int num_node, int popultion);
 	~circuit();
 
 		// methods - GA

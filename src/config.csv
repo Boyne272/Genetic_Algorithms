@@ -1,5 +1,5 @@
 number of units,5
-population size,100
+population size,200
 number of iterations,2000
 genetic cross over chance,0.9
 genetic mutation rate,0.01
