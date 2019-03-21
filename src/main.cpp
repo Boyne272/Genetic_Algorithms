@@ -33,7 +33,8 @@ void read_file(ifstream& file, double& val) {
 int main(int argc, char *argv[]) {
 	
 		// seed the RNG
-	srand(time(NULL));
+	//srand(time(NULL));
+	srand(100);
 	
 		// open config file
 	ifstream config;
@@ -64,7 +65,7 @@ int main(int argc, char *argv[]) {
 		// initalise the parents, check they are valid and find the fittness of them
 	int cnt = 0;
 	while (cnt < population) {
-		parents[cnt] = circuit(num_unit);
+		parents[cnt] = circuit(num_unit, population);
 		if (parents[cnt].validate_simple()) {   // if passes simple tests
 			parents[cnt].set_units();			// set the cuits within it
 			if (parents[cnt].validate_connected())  // if passes more complex tests
@@ -75,15 +76,14 @@ int main(int argc, char *argv[]) {
 
 		// initalise the children and set the desired parameters
 	for (int i = 0; i < population; i++) {
-		children[i] = circuit(num_unit);
+		children[i] = circuit(num_unit, population);
 
-		children->population = parents->population = population;
-		children->cross_prob = parents->cross_prob = cross_prob;
-		children->mutate_prob = parents->mutate_prob = mute_prob;
-		children->ppkg_gor = parents->ppkg_gor = ppk_gorm;
-		children->ppkg_waste = parents->ppkg_waste = ppk_waste;
-		children->ga_tol = parents->ga_tol = ga_tol;
-		children->sim_tol = parents->sim_tol = ga_tol;
+		children[i].cross_prob	= parents[i].cross_prob = cross_prob;
+		children[i].mutate_prob = parents[i].mutate_prob = mute_prob;
+		children[i].ppkg_gor	= parents[i].ppkg_gor = ppk_gorm;
+		children[i].ppkg_waste	= parents[i].ppkg_waste = ppk_waste;
+		children[i].ga_tol		= parents[i].ga_tol = ga_tol;
+		children[i].sim_tol		= parents[i].sim_tol = ga_tol;
 
 	}
 
