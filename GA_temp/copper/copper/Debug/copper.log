@@ -1,4 +1,0 @@
-﻿  ranking.cpp
-c:\users\yujie\source\repos\copper\copper\ranking.cpp(65): warning C4101: 'temp_array': unreferenced local variable
-c:\users\yujie\source\repos\copper\copper\ranking.cpp(66): warning C4101: 'temp_fitness': unreferenced local variable
-  copper.vcxproj -> C:\Users\Yujie\source\repos\copper\Debug\copper.exe

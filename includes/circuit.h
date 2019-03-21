@@ -6,17 +6,19 @@ class circuit {
 public:
 	
 		// VIRABLES SET BY USER
-	int population = 100;
-	double mutate_prob	= 0.01;
-	double cross_prob	= 0.8;
-	double ppkg_gor		= 100;
-	double ppkg_waste	= 500;
+	int population = 100;			// the total number of circuits
+	double mutate_prob	= 0.01;		// probability of mutating
+	double cross_prob	= 0.8;		// probability of ginetic crossing
+	double ppkg_gor		= 100;		// price per kg gormanium
+	double ppkg_waste	= 500;		// cost per kg waste
+	double ga_tol		= 1000;		// IMPLEMENT ME!!!
+	double sim_tol		= 0.001;	// IMPLEMENT ME!!!
 	
 		// SIMULATION VAIRABLES
 	int num_node;					// number of units
 	int adj_list_length;			// number of pipes
 	int *adjacency_list = nullptr;	// array of pipes
-	double fitness = 0;				// fitness value
+	double fitness;					// fitness value
 	cunit* units = nullptr;			// list of unit objects
 	
 		// GENETIC ALGORITHM VAIRABLES
@@ -32,7 +34,6 @@ public:
 
 		// methods - GA
 	void mutate();
-	//void reproduce(circuit cother_circuit, int* &new_connections);
 
 		// methods - Validate
 	bool validate_simple();

@@ -41,7 +41,7 @@ clean:
 # ------------------------------- Tests ----------------------------------
 
 # declare the tests to make
-TESTS = test_travis test_evaluate test_genetic_algorithm test_validate
+TESTS = test_travis test_evaluate test_genetic_algorithm test_validate test_full_run
 
 # call the following functions to make the all test files
 tests: ${TESTS}
@@ -50,9 +50,15 @@ tests: ${TESTS}
 # travis test
 test_travis: $(TEST_BIN_DIR)/test_travis
 
-$(TEST_BIN_DIR)/test_travis: $(TEST_BUILD_DIR)/test_travis.o #$(BUILD_DIR)/additional dependencies
+$(TEST_BIN_DIR)/test_travis: $(TEST_BUILD_DIR)/test_travis.o
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
+
+# full run test
+test_full_run: $(TEST_BIN_DIR)/test_full_run
+
+$(TEST_BIN_DIR)/test_full_run: $(TEST_BUILD_DIR)/test_full_run.o $(BUILD_DIR)/circuit.o $(BUILD_DIR)/cunit.o $(BUILD_DIR)/genetic_algorithm.o
+	$(CXX) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 # evaluate test
 test_evaluate: $(TEST_BIN_DIR)/test_evaluate
@@ -64,7 +70,7 @@ $(TEST_BIN_DIR)/test_evaluate: $(TEST_BUILD_DIR)/test_evaluate.o $(BUILD_DIR)/ci
 # genetic_algorithm test
 test_genetic_algorithm: $(TEST_BIN_DIR)/test_genetic_algorithm
 
-$(TEST_BIN_DIR)/test_genetic_algorithm: $(TEST_BUILD_DIR)/test_genetic_algorithm.o #$(BUILD_DIR)/additional dependencies
+$(TEST_BIN_DIR)/test_genetic_algorithm: $(TEST_BUILD_DIR)/test_genetic_algorithm.o $(BUILD_DIR)/circuit.o $(BUILD_DIR)/genetic_algorithm.o $(BUILD_DIR)/cunit.o
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 

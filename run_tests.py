@@ -14,9 +14,10 @@ for file in files:
     if sys.platform == "win32" and file.split(".")[-1] != "exe":
          continue
     if not os.path.isdir(file) and "test" in file:  # skip directories and unwanted files such as core dumps
+        print("Running test %s:\n" % file)
         output = subprocess.run([file], stdout=subprocess.PIPE, universal_newlines=True)
+        print(output.stdout)
         test_failed = False
-        print("Test ...%s output:\n" % file, output.stdout)
         if output.returncode:
             test_failed = True
         if "fail" in output.stdout:
