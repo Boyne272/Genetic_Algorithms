@@ -33,12 +33,28 @@ void read_file(ifstream& file, double& val) {
 int main(int argc, char *argv[]) {
 	
 		// seed the RNG
-	//srand(time(NULL));
-	srand(100);
+	srand(time(NULL));
 	
+		// read in command line options
+	string config_name, out_name;
+	if (argc == 1) {
+		config_name = "config.csv";
+		out_name = "output.csv";
+	}
+	else if (argc == 2) {
+		config_name = argv[1];
+		out_name = "output.csv";
+	}
+	else if (argc == 3) {
+		config_name = argv[1];
+		out_name = argv[2];
+	}
+
+
+
 		// open config file
 	ifstream config;
-	config.open("config.csv");
+	config.open(config_name);
 	if (!config.is_open()) {
 		cout << "Error could not find config file\n";
 		return -1;
@@ -78,28 +94,59 @@ int main(int argc, char *argv[]) {
 	for (int i = 0; i < population; i++) {
 		children[i] = circuit(num_unit, population);
 
-		children[i].cross_prob	= parents[i].cross_prob = cross_prob;
-		children[i].mutate_prob = parents[i].mutate_prob = mute_prob;
-		children[i].ppkg_gor	= parents[i].ppkg_gor = ppk_gorm;
-		children[i].ppkg_waste	= parents[i].ppkg_waste = ppk_waste;
-		children[i].ga_tol		= parents[i].ga_tol = ga_tol;
-		children[i].sim_tol		= parents[i].sim_tol = ga_tol;
+		children[i].cross_prob	= parents[i].cross_prob		= cross_prob;
+		children[i].mutate_prob	= parents[i].mutate_prob	= mute_prob;
+		children[i].ppkg_gor	= parents[i].ppkg_gor		= ppk_gorm;
+		children[i].ppkg_waste	= parents[i].ppkg_waste		= ppk_waste;
+		children[i].ga_tol		= parents[i].ga_tol			= ga_tol;
+		children[i].sim_tol		= parents[i].sim_tol		= sim_tol;
 
 	}
 
-	for (int it = 0; it < iterations; it++) {
+		// iterate with convergence criteria
+	double old_best;
+	int count(1), it(0);
+	while (it < iterations) {
+
+			// keep previous best
+		old_best = parents[0].fitness;
+
 			// iterate
 		iterate_alg(parents, children, population);
+		it++;
+
+			// check with previous beast
+		if (children[0].fitness != old_best) 
+			count = 1;
+		else {
+			count++;
+			if (count == ga_tol)
+				break;
+		}
+
 			// swap parent and child list
 		circuit* tmp = parents;
 		parents = children;
 		children = tmp;
 	}
-	
+
+	cout << "finished iterating\n";
 
 		// write the output IMPLEMENT ME!!x
+	ofstream file;
+	file.open(out_name, ofstream::app);
+	const int it_act = (it != iterations) ? it - ga_tol : it;
+	file << "Iterations Val,Iterations Act,Fitness\n"
+		<< it << "," << it_act << "," << old_best << "\n";
+	file.close();
+	parents[0].analysis(out_name);
+	cout << "wrote to file " << out_name << "\n";
 
-	cout << "algorithm finished\n";
+	/*cout << endl<<"algorithm finished at the " << final_iteration << "th iteration\n";
+	cout << "the fitness value of optimum circuit: " << children[0].fitness << endl;
+	cout << endl<<"Parameters: "<<endl<<"maximum iterations: " << iterations << endl;
+	cout << "population size: " << population << endl;
+	cout << "num_units: " << num_unit << endl;*/
 	system("pause");
 
 }

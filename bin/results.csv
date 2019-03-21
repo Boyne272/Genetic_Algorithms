@@ -1,0 +1,18 @@
+Iterations Val,Iterations Act,Fitness
+1268,268,24.8196
+Num_Node, Feed Gormanium, Feed Waste, PPKG Gormanium, PPKG Waste 
+5,10,100,100,500
+Concentrate gor amount, Concentrate waste amount
+0.53824,0.0580087
+Tail gor amount, Tail waste amount
+9.46207,99.942
+Cell id, Total Degree, Conc Degree, Tail Degree 
+0,3,2,1
+1,1,0,1
+2,2,2,0
+3,1,0,1
+4,2,0,1
+Cell id, Max Total Degree, Max Conc Degree, Max Tail Degree 
+0,3,,
+0,,2,
+4,,,1

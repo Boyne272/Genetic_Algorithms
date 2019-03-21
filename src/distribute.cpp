@@ -25,8 +25,8 @@ void find_distribution(int population, int num_processors, int my_id,
 
 
 
-int main() {
-//void test_find_distribution()
+//int main() {
+void test_find_distribution() {
 
 	int p = 6;
 	int population = 100;

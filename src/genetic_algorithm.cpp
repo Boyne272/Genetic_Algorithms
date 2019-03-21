@@ -36,7 +36,6 @@ void prep_parents(circuit* parents, circuit* best_child) {
 	for (int i = 0; i < best_child->adj_list_length; i++)
 		best_child->adjacency_list[i] = parents[max_index].adjacency_list[i];
 
-
 		// in case thats min is negative scale all
 	for (int i = 0; i < population; i++)
 		parents[i].fitness -= min_fit; // -1 ensures positive
@@ -55,7 +54,6 @@ void prep_parents(circuit* parents, circuit* best_child) {
 	parents[0].cfit = parents[0].rfit;
 	for (int i = 1; i < population; i++) {
 		parents[i].cfit = parents[i].rfit + parents[i - 1].cfit;
-		//cout << "c-value " << i << " is " << parents[i].cfit << "\n";
 	}
 	
 		// artificially set the final value to be 1 incase of floating point issues
