@@ -94,7 +94,7 @@ cunit::cunit(int id, int dest_1, int dest_2) : id(id), out_conc(dest_1), out_tai
 }
 
 void cunit::reset_contents() {
-	int test_mode = 2; // parameter for testing different methods of initialisation 
+	int test_mode = 1; // parameter for testing different methods of initialisation 
 
 	if (test_mode == 2) {
 		this->contents[0] = this->old_contents[0]; // changed to initialise with full pipes - converges faster.

@@ -47,7 +47,7 @@ int main() {
 
 		// check solution matches what is expected
 	// changed to fabs.
-	const double diff = fabs(parents[0].fitness - 24.8126);
+	const double diff = fabs(parents[0].fitness - 24.8162);
 	if (diff > 0.001) {
 		cout << "Failed full run test\n";
 		return -1;

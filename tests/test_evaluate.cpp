@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 	fail_check = test1.evaluate();
 	
 	const double tmp1 = test1.fitness - 24.8162;
-	if (fabs(tmp1) > 0.01) {
+	if (fabs(tmp1) > 0.001) {
 		cout << "failed test 1\n";
 		return -1;
 	}
@@ -38,6 +38,7 @@ int main(int argc, char** argv) {
 	test2.set_units();
 	test2.evaluate();
 	const double tmp2 = test2.fitness - 10.4712;
+	
 	if (fabs(tmp2) > 0.01) {
 		cout << "failed test 2\n";
 		return -1;
@@ -57,9 +58,9 @@ int main(int argc, char** argv) {
 	test1.set_units();
 
 	test1.evaluate();
-
+	
 	const double tmp3 = test1.fitness - 24.8162;
-	if (fabs(tmp3) > 0.01) {
+	if (fabs(tmp3) > 0.001) {
 		cout << "failed test 3\n";
 		return -1;
 	}
@@ -83,7 +84,7 @@ int main(int argc, char** argv) {
 	
 	
 	cout << "all test passed \n";
-
+	system("pause");
 	return 0;
 
 

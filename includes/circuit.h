@@ -12,7 +12,7 @@ public:
 	double ppkg_gor		= 100;		// price per kg gormanium
 	double ppkg_waste	= 500;		// cost per kg waste
 	double ga_tol		= 1000;		// IMPLEMENT ME!!!
-	double sim_tol		= 0.001;	// IMPLEMENT ME!!!
+	double sim_tol		= 1e-6;	// used as convergence tolerance // IMPLEMENTED.
 	
 		// SIMULATION VAIRABLES
 	int num_node;					// number of units

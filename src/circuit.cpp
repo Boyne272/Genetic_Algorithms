@@ -164,7 +164,7 @@ bool circuit::evaluate() {
 	// limit is maximum number of iterations if no convergence. 
 	int limit = 2000;
 	int count = 0;
-	double tolerance = 1e-6;
+	double tolerance = sim_tol;
 	bool converged = false;
 	bool convergence_debug_flag = false;
 
@@ -185,7 +185,7 @@ bool circuit::evaluate() {
 
 
 	double profit = 0;
-	profit = (this->units[this->num_node].contents[0] * 100) - (this->units[this->num_node].contents[1] * 500);
+	profit = (this->units[this->num_node].contents[0] * ppkg_gor) - (this->units[this->num_node].contents[1] * ppkg_waste);
 	
 	// if not converged, give worst possible score.
 	if (converged == false) {
@@ -265,9 +265,9 @@ void circuit::analysis()
 			max_list[1] = units[i].num_conc_feeds;
 			max_id_list[1] = units[i].id;
 		}
-		if (units[i].num_tot_feeds > max_list[1]) {
-			max_list[1] = units[i].num_tot_feeds;
-			max_id_list[1] = units[i].id;
+		if (units[i].num_tot_feeds > max_list[2]) {
+			max_list[2] = units[i].num_tail_feeds;
+			max_id_list[2] = units[i].id;
 		}
 
 	}
