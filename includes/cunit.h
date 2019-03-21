@@ -12,7 +12,11 @@ public:
 	int num_tot_feeds = 0; // total number of feeds leeding into cell.
 	int num_conc_feeds = 0; // total number of gormanium feeds going into cell.
 	int num_tail_feeds = 0;  // total number of waste feeds going into cell.
-	
+
+	double input_gor; // input amounts now specified.
+	double input_waste; // input amounts now specified.
+
+
 	int mark = 0;				// mark if this node has been reached by another node
 	bool conc_found = false;	// mark if this node can find conc exit
 	bool tail_found = false;	// mark if this node can find tail exit

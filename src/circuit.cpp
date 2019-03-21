@@ -77,6 +77,8 @@ void circuit::set_units() {
 
 		// set all internal nodes to new adjaceny list
 	for (int i = 0; i < this->num_node; i++) {
+		units[i].input_gor = input_gor;
+		units[i].input_waste = input_waste;
 		units[i].id = i;
 		units[i].out_conc = adjacency_list[(2 * i) + 1];
 		units[i].out_tail = adjacency_list[(2 * i) + 2];
@@ -88,6 +90,8 @@ void circuit::set_units() {
 
 		// for the two exit nodes
 	for (int i = this->num_node; i < this->num_node + 2; i++) {
+		units[i].input_gor = input_gor;
+		units[i].input_waste = input_waste;
 		units[i].id = i;
 		units[i].reset_contents();
 	}
@@ -163,7 +167,7 @@ void circuit::step() {
 bool circuit::evaluate() {
 	// main evaluation loop.
 	// limit is maximum number of iterations if no convergence. 
-	int limit = 2000;
+	int limit = 20000;
 	int count = 0;
 	double tolerance = sim_tol;
 	bool converged = false;
@@ -175,8 +179,9 @@ bool circuit::evaluate() {
 	}
 
 	while ((converged == false) && (count < limit)){
-		this->units[this->adjacency_list[0]].contents[0] += 10; // input feed to the circuit. 
-		this->units[this->adjacency_list[0]].contents[1] += 100;
+			// change in and out conc flows.
+		this->units[this->adjacency_list[0]].contents[0] += input_gor; // input feed to the circuit. 
+		this->units[this->adjacency_list[0]].contents[1] += input_waste;
 		converged = this->convergence_check(tolerance);
 		this->step();
 		count++;
@@ -187,10 +192,11 @@ bool circuit::evaluate() {
 
 	double profit = 0;
 	profit = (this->units[this->num_node].contents[0] * ppkg_gor) - (this->units[this->num_node].contents[1] * ppkg_waste);
+	//cout << this->units[this->num_node].contents[0] << "  " << this->units[this->num_node].contents[1] << endl;
 	
 	// if not converged, give worst possible score.
 	if (converged == false) {
-		this->fitness = (-500 * 100);
+		this->fitness = (-ppkg_waste * input_waste);
 	}
 
 	else {
@@ -233,7 +239,7 @@ void circuit::mutate()
 
 // ------------------------- analysis ------------------------------------
 
-void circuit::analysis()
+void circuit::analysis(string filename)
 {
 	for (int i = 0; i < this->num_node; i++) {
 		// find the unit each pipe sends to and add the material sent by unit[i].
@@ -241,14 +247,14 @@ void circuit::analysis()
 		const int conc = (units[i].out_conc); // slow?
 
 		units[conc].num_tot_feeds += 1;
-		units[conc].num_conc_feeds+= 1;
-		
+		units[conc].num_conc_feeds += 1;
+
 		const int tail = (units[i].out_tail); // slow?
 
 		units[tail].num_tot_feeds += 1;
 		units[tail].num_tail_feeds += 1;
 	}
-	
+
 	units[this->adjacency_list[0]].num_tot_feeds += 1; // accounting for origional feed.
 
 
@@ -256,20 +262,73 @@ void circuit::analysis()
 	int max_list[]{ 0,0,0 }; // total, conc, tail
 	int max_id_list[]{ 0,0,0 };
 
-	for (int i = 0; i < this->num_node; i++) {
-		cout << "CELL: " << units[i].id << " Total: " << units[i].num_tot_feeds << " Conc: " << units[i].num_conc_feeds << " Tail: " << units[i].num_tail_feeds << endl;
-		if (units[i].num_tot_feeds > max_list[0]) {
-			max_list[0] = units[i].num_tot_feeds;
-			max_id_list[0] = units[i].id;
+
+
+	if (filename == "print") {
+		for (int i = 0; i < this->num_node; i++) {
+			cout << "CELL: " << units[i].id << " Total: " << units[i].num_tot_feeds << " Conc: " << units[i].num_conc_feeds << " Tail: " << units[i].num_tail_feeds << endl;
+			if (units[i].num_tot_feeds > max_list[0]) {
+				max_list[0] = units[i].num_tot_feeds;
+				max_id_list[0] = units[i].id;
+			}
+			if (units[i].num_conc_feeds > max_list[1]) {
+				max_list[1] = units[i].num_conc_feeds;
+				max_id_list[1] = units[i].id;
+			}
+			if (units[i].num_tot_feeds > max_list[2]) {
+				max_list[2] = units[i].num_tail_feeds;
+				max_id_list[2] = units[i].id;
+			}
+
 		}
-		if (units[i].num_conc_feeds > max_list[1]) {
-			max_list[1] = units[i].num_conc_feeds;
-			max_id_list[1] = units[i].id;
+	}
+
+	else {
+
+		// open files. 
+		ofstream out_csv(filename);
+		out_csv << "Num_Node, Feed Gormanium, Feed Waste, PPKG Gormanium, PPKG Waste \n";
+		out_csv << num_node << "," << input_gor << "," << input_waste << "," << ppkg_gor << "," << ppkg_waste << "\n";
+		out_csv << "Concentrate gor amount, Concentrate waste amount\n";
+		out_csv << units[num_node].contents[0] << "," << units[num_node].contents[1] << "\n";
+		out_csv << "Tail gor amount, Tail waste amount\n";
+		out_csv << units[num_node + 1].contents[0] << "," << units[num_node + 1].contents[1] << "\n";
+
+
+
+		out_csv << "Cell id, Total Degree, Conc Degree, Tail Degree \n";
+
+
+		for (int i = 0; i < this->num_node; i++) {
+			//cout << "CELL: " << units[i].id << " Total: " << units[i].num_tot_feeds << " Conc: " << units[i].num_conc_feeds << " Tail: " << units[i].num_tail_feeds << endl;
+
+			out_csv << units[i].id << "," << units[i].num_tot_feeds << "," << units[i].num_conc_feeds << "," << units[i].num_tail_feeds << "\n";
+
+			if (units[i].num_tot_feeds > max_list[0]) {
+				max_list[0] = units[i].num_tot_feeds;
+				max_id_list[0] = units[i].id;
+			}
+			if (units[i].num_conc_feeds > max_list[1]) {
+				max_list[1] = units[i].num_conc_feeds;
+				max_id_list[1] = units[i].id;
+			}
+			if (units[i].num_tot_feeds > max_list[2]) {
+				max_list[2] = units[i].num_tail_feeds;
+				max_id_list[2] = units[i].id;
+			}
+
 		}
-		if (units[i].num_tot_feeds > max_list[2]) {
-			max_list[2] = units[i].num_tail_feeds;
-			max_id_list[2] = units[i].id;
-		}
+		out_csv << "Cell id, Max Total Degree, Max Conc Degree, Max Tail Degree \n";
+		out_csv << max_id_list[0] << "," << max_list[0] << ",,\n";
+		out_csv << max_id_list[1] << ",," << max_list[1] << ",\n";
+		out_csv << max_id_list[2] << ",,," << max_list[2] << "\n";
+
+		
+
+
+		out_csv.close();
+
 
 	}
 }
+

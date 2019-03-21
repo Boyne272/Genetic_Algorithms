@@ -12,7 +12,15 @@ public:
 	double ppkg_waste	= 500;		// cost per kg waste
 	double ga_tol		= 1000;		// IMPLEMENT ME!!!
 	double sim_tol		= 1e-6;		// used as convergence tolerance // IMPLEMENTED.
+	double input_gor	= 10;		// IMPLEMENT ME!!!
+	double input_waste  = 100;		// used as convergence tolerance // IMPLEMENTED.
+
+	// TODO
+	// input waste and gor as variables that can be changed,
+	// print out final waste and gor
 	
+
+
 		// SIMULATION VAIRABLES
 	int population;					// the total number of circuits
 	int num_node;					// number of units
@@ -45,5 +53,5 @@ public:
 	bool evaluate();
 	bool convergence_check(double tol);	
 		// methods - analysis
-	void analysis();
+	void analysis(string filename);
 };

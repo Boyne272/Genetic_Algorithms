@@ -45,18 +45,22 @@ cunit::cunit(int id, int dest_1, int dest_2) : id(id), out_conc(dest_1), out_tai
 	for (int i = 0; i < 2; i++) {
 		// initialise values.
 
-		this->contents[i] = 0;
+		this->contents[i] = 0; // reset out contents aswell?
 	}
 }
 
 void cunit::reset_contents() {
-	int test_mode = 1; // parameter for testing different methods of initialisation 
-
+	int test_mode = 3; // parameter for testing different methods of initialisation 
+	// test mode 0 -> resets empty
+	// test mode 1 -> resets full with 10 g, 100 w. 
+	// test mode 2 -> resets with contents from previous parent simulation
+	// test mode 3 -> resets using diff allocations of input
 	if (test_mode == 2) {
 		this->contents[0] = this->old_contents[0]; // changed to initialise with full pipes - converges faster.
 		this->contents[1] = this->old_contents[1];
 
 	}
+	
 	for (int i = 0; i < 2; i++) {
 		// initialise values.
 		this->old_contents[i] = 1; 
@@ -70,6 +74,10 @@ void cunit::reset_contents() {
 	if (test_mode == 1) {
 		this->contents[0] = 10; // changed to initialise with full pipes - converges faster.
 		this->contents[1] = 100;
+	}
+	if (test_mode == 3) {
+		this->contents[0] = input_gor; // changed to initialise with full pipes - converges faster.
+		this->contents[1] = input_waste;
 	}
 
 
@@ -98,8 +106,8 @@ void cunit::calc_yield() {
 
 bool cunit::within_tol(double tol) {
 	// checks if within 
-	if ((std::abs((double)(contents[0] - old_contents[0])) < tol) &&
-		(std::abs((double)(contents[1] - old_contents[1])) < tol)) {
+	if ((fabs((double)(contents[0] - old_contents[0])) < tol) &&
+		(fabs((double)(contents[1] - old_contents[1])) < tol)) {
 		return true;
 	}
 	else {
