@@ -9,8 +9,7 @@ int main() {
 	const int population = 100;
 	const int num_unit	 = 5;
 	const int iterations = 2000;	// to be safe
-	//srand(time(NULL));
-	//srand(3);
+	srand(100);
 
 
 		// create the parents and children list
