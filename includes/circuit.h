@@ -51,5 +51,5 @@ public:
 	bool convergence_check(double tol);	
 
 		// methods - analysis
-	void save(int fitness, ofstream &file);
+	void save(int fitness, ofstream &file, string additional = "");
 };

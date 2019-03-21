@@ -104,6 +104,7 @@ int main(int argc, char *argv[]) {
 	MPI_Comm_rank(MPI_COMM_WORLD, &id);
 	MPI_Comm_size(MPI_COMM_WORLD, &p);
 	srand(time(NULL) + id * 10);
+	double time = MPI_Wtime();
 
 	//////////////////////////////////////////////////
 	
@@ -294,19 +295,6 @@ int main(int argc, char *argv[]) {
 			cout.flush();
 		#endif // PRINT
 
-			// check with previous beast
-		if (children[0].fitness != old_best) 
-			count = 1;
-		else {
-			count++;
-			if (count == ga_tol) {
-				#ifdef PRINT
-					cout << id << "-we are breaking out(" << it << ")\n";
-					cout.flush();
-				#endif // PRINT
-				break;
-			}
-		}
 
 
 		/////////////////////////////////////////////////////
@@ -342,6 +330,20 @@ int main(int argc, char *argv[]) {
 
 		/////////////////////////////////////////////////////
 
+			// check with previous beast
+		if (parents[0].fitness != old_best) 
+			count = 1;
+		else {
+			count++;
+			if (count == ga_tol) {
+				#ifdef PRINT
+					cout << id << "-we are breaking out(" << it << ")\n";
+					cout.flush();
+				#endif // PRINT
+				break;
+			}
+		}
+
 	}
 
 	#ifdef PRINT
@@ -352,17 +354,19 @@ int main(int argc, char *argv[]) {
 		// write the output
 	if (id == 0) {
 		ofstream file;
+		stringstream ss;
+		ss << p << "," << MPI_Wtime() - time << ",";
 		file.open(out_name, ofstream::app);
-		parents[0].save(it, file);
+		parents[0].save(it, file, ss.str());
 		file.close();
-		cout << "wrote to file " << out_name << "\n";
+		cout << id << "-wrote to file(" << out_name << ")\n";
 	}
 
 		// clean memory with workaround kill function
 	for (int i = 0; i < my_pop; i++) {
 		children[i].killme();
 		parents[i].killme();
-	}
+	}	
 	delete[] children;
 	delete[] parents;
 

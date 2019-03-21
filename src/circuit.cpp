@@ -236,7 +236,7 @@ void circuit::mutate()
 
 // ------------------------- analysis ------------------------------------
 
-void circuit::save(int iterations, ofstream &file) {
+void circuit::save(int iterations, ofstream &file, string additional) {
 
 	// headings for the save columns
 	// iterations, fitness, num_node, Concentrate gor amount, 
@@ -254,6 +254,6 @@ void circuit::save(int iterations, ofstream &file) {
 		<< adjacency_list[0];
 	for (int i = 1; i < adj_list_length; i++)
 		file << "-" << adjacency_list[i];
-	file << "\n";
+	file << "," << additional << "\n";
 
 }
