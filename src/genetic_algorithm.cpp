@@ -163,10 +163,6 @@ void breed(circuit *father, circuit *mother, circuit *child) {
 
 void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
 
-		// initalise the parents and childeren
-	const int pop = parents[0].population;
-
-
 		// find the cfit values for sampling parents and set the best child
 	prep_parents(parents, children);  // ISSUE in paralisation (only one node needs)
 		// recalculate best childs fiteness
@@ -179,9 +175,7 @@ void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
 	bool alive_1, alive_2;
 
 	// while we want two children
-	while (index_2 < pop) {
-
-		//cout << index_1 << " " << index_2 << "\n";
+	while (index_2 < child_len) {
 
 			// make the children
 		pick_parents(parents, mom, dad);
@@ -191,19 +185,19 @@ void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
 
 			// child 1
 		alive_1 = false;
-		if (children[index_1].validate_simple()) {  // if passes simple tests
-			children[index_1].set_units();	// set the cuits within it
-			if (children[index_1].validate_connected()) {  // if passes more complex tests
-				alive_1 = children[index_1].evaluate();
+		if (children[index_1].validate_simple()) {			// if passes simple tests
+			children[index_1].set_units();					// set the cuits within it
+			if (children[index_1].validate_connected()) {	// if passes more complex tests
+				alive_1 = children[index_1].evaluate();		// chcek convergence and find value
 			}
 		}
 
 			// child 2
 		alive_2 = false;
-		if (children[index_2].validate_simple()) {  // if passes simple tests
-			children[index_2].set_units();	// set the cuits within it
-			if (children[index_2].validate_connected()) { // if passes more complex tests
-				alive_2 = children[index_2].evaluate();
+		if (children[index_2].validate_simple()) {			// if passes simple tests
+			children[index_2].set_units();					// set the cuits within it
+			if (children[index_2].validate_connected()) {	// if passes more complex tests
+				alive_2 = children[index_2].evaluate();		// chcek convergence and find value
 			}
 		}
 		
@@ -225,7 +219,7 @@ void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
 	}
 
 		// if we still need one child at the end
-	while (index_1 < pop) {
+	while (index_1 < child_len) {
 
 			// make a single child
 		pick_parents(parents, mom, dad);
@@ -241,7 +235,7 @@ void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
 
 			// if it survived break the loop
 		if (alive_1)
-			index_1 = pop;
+			index_1 = child_len;
 	}
 
 

@@ -1,11 +1,12 @@
 number of units,5
 population size,100
-genetic cross over chance,0.99
+number of iterations,2000
+genetic cross over chance,0.9
 genetic mutation rate,0.01
 gormanium profit,100
 contamination cost,500
-
-
-# this is the config file for setting up the genetic algorithm circuit solver
-# parameters must be entered in the correct order with values directally following 
-
+genetic algorithm steady state tolerance,1000
+circuit fitness steady state toleraence,0.0001
+,,
+# this is the config file for setting up the genetic algorithm circuit solver,,
+# parameters must be entered in the correct order,,

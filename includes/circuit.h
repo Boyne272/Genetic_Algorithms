@@ -7,7 +7,6 @@ public:
 	
 		// VIRABLES SET BY USER
 	int population = 100;			// the total number of circuits
-	int my_population = 100;		// total circuits solved by this CPU (parallel)
 	double mutate_prob	= 0.01;		// probability of mutating
 	double cross_prob	= 0.8;		// probability of ginetic crossing
 	double ppkg_gor		= 100;		// price per kg gormanium

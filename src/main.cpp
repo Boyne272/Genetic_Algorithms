@@ -9,6 +9,10 @@ void read_file(ifstream& file, int& val) {
 	ss << buff;
 	getline(ss, buff, ',');
 	getline(ss, buff, ',');
+
+	if (buff == "")
+		throw ("Error in loading config data");
+
 	val = stoi(buff);
 }
 
@@ -19,6 +23,10 @@ void read_file(ifstream& file, double& val) {
 	ss << buff;
 	getline(ss, buff, ',');
 	getline(ss, buff, ',');
+
+	if (buff == "")
+		throw ("Error in loading config data");
+
 	val = stod(buff);
 }
 
@@ -45,7 +53,6 @@ int main(int argc, char *argv[]) {
 	read_file(config, mute_prob);
 	read_file(config, ppk_gorm);
 	read_file(config, ppk_waste);
-	read_file(config, ppk_waste);
 	read_file(config, ga_tol);
 	read_file(config, sim_tol);
 	cout << "Config sucessfully read in\n";
@@ -71,7 +78,6 @@ int main(int argc, char *argv[]) {
 		children[i] = circuit(num_unit);
 
 		children->population = parents->population = population;
-		children->my_population = parents->my_population = population;
 		children->cross_prob = parents->cross_prob = cross_prob;
 		children->mutate_prob = parents->mutate_prob = mute_prob;
 		children->ppkg_gor = parents->ppkg_gor = ppk_gorm;
@@ -93,7 +99,7 @@ int main(int argc, char *argv[]) {
 
 		// write the output IMPLEMENT ME!!x
 
-
+	cout << "algorithm finished\n";
 	system("pause");
 
 }
