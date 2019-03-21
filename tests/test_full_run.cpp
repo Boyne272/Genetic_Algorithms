@@ -20,13 +20,13 @@ int main() {
 
 		// initalise the children
 	for (int i = 0; i < population; i++)
-		children[i] = circuit(num_unit);
+		children[i] = circuit(num_unit, population);
 
 
 		// initalise the parents and check find the fittness of them
 	int i = 0;
 	while (i < population) {
-		parents[i] = circuit(num_unit);
+		parents[i] = circuit(num_unit, population);
 
 		if (parents[i].validate_simple()) {  // if passes simple tests
 			parents[i].set_units();	// set the cuits within it

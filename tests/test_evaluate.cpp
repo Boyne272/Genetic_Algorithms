@@ -84,7 +84,6 @@ int main(int argc, char** argv) {
 	
 	
 	cout << "all test passed \n";
-	system("pause");
 	return 0;
 
 

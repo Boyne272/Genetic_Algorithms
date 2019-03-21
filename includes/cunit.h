@@ -24,7 +24,7 @@ public:
 
 	// SIMULATION TEAM CODE 
 	cunit(int id, int dest_1, int dest_2);
-	cunit();
+	cunit() {} // default constrctor for initalising array memory
 	void reset_contents();
 
 	//index of the unit to which this unit’s concentrate stream is connected 

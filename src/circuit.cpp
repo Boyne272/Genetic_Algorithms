@@ -6,7 +6,8 @@ using namespace std;
 
 // -------------------------- setup ------------------------------
 
-circuit::circuit(int num_node, int pop) : num_node(num_node), adj_list_length(1 + 2*num_node), population(pop) {
+circuit::circuit(int num_node, int pop) 
+	: population(pop), num_node(num_node), adj_list_length(1 + 2*num_node){
 
 		// setup the adjasency list and initalise it as random nodes
 	adjacency_list = new int[adj_list_length];
