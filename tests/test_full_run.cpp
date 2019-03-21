@@ -2,6 +2,7 @@
 #include "genetic_algorithm.h"
 #include "circuit.h"
 
+
 int main() {
 
 		// parameters to solve for
@@ -45,7 +46,8 @@ int main() {
 	}
 
 		// check solution matches what is expected
-	const double diff = abs(parents[0].fitness - 24.8126);
+	// changed to fabs.
+	const double diff = fabs(parents[0].fitness - 24.8126);
 	if (diff > 0.001) {
 		cout << "Failed full run test\n";
 		return -1;
