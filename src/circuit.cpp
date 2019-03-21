@@ -286,7 +286,7 @@ void circuit::analysis(string filename)
 	else {
 
 		// open files. 
-		ofstream out_csv(filename);
+		ofstream out_csv(filename, ofstream::app);
 		out_csv << "Num_Node, Feed Gormanium, Feed Waste, PPKG Gormanium, PPKG Waste \n";
 		out_csv << num_node << "," << input_gor << "," << input_waste << "," << ppkg_gor << "," << ppkg_waste << "\n";
 		out_csv << "Concentrate gor amount, Concentrate waste amount\n";
