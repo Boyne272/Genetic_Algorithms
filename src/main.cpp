@@ -9,6 +9,10 @@ void read_file(ifstream& file, int& val) {
 	ss << buff;
 	getline(ss, buff, ',');
 	getline(ss, buff, ',');
+
+	if (buff == "")
+		throw ("Error in loading config data");
+
 	val = stoi(buff);
 }
 
@@ -19,13 +23,18 @@ void read_file(ifstream& file, double& val) {
 	ss << buff;
 	getline(ss, buff, ',');
 	getline(ss, buff, ',');
+
+	if (buff == "")
+		throw ("Error in loading config data");
+
 	val = stod(buff);
 }
 
 int main(int argc, char *argv[]) {
 	
 		// seed the RNG
-	srand(time(NULL));
+	//srand(time(NULL));
+	srand(100);
 	
 		// open config file
 	ifstream config;
@@ -35,9 +44,9 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-		// load the units
-	int num_unit(0), population(0), iterations(0);
-	double cross_prob(0), mute_prob(0), ppk_gorm(0), ppk_waste(0);
+		// load the parameters
+	int num_unit(0), population(0), iterations(0), ga_tol(0);
+	double cross_prob(0), mute_prob(0), ppk_gorm(0), ppk_waste(0), sim_tol(0);
 	read_file(config, num_unit);
 	read_file(config, population);
 	read_file(config, iterations);
@@ -45,43 +54,52 @@ int main(int argc, char *argv[]) {
 	read_file(config, mute_prob);
 	read_file(config, ppk_gorm);
 	read_file(config, ppk_waste);
+	read_file(config, ga_tol);
+	read_file(config, sim_tol);
+	cout << "Config sucessfully read in\n";
 
-	cout << "Read in: \n"
-		<< num_unit << "\n"
-		<< population << "\n"
-		<< cross_prob << "\n"
-		<< mute_prob << "\n"
-		<< ppk_gorm << "\n"
-		<< ppk_waste << "\n";
-
-	system("pause");
-	
 		// create the parents and children list
 	circuit* parents = new circuit[population];
 	circuit* children = new circuit[population];
 
-		// initalise the children
-	for (int i = 0; i < population; i++)
-		children[i] = circuit(num_unit);
-
-		// initalise the parents and check find the fittness of them
-	int i = 0;
-	while (i < population) {
-		parents[i] = circuit(num_unit);
-
-		if (parents[i].validate_simple()) {  // if passes simple tests
-			parents[i].set_units();	// set the cuits within it
-			if (parents[i].validate_connected())  // if passes more complex tests
-				if (parents[i].evaluate())
-					i++;
+		// initalise the parents, check they are valid and find the fittness of them
+	int cnt = 0;
+	while (cnt < population) {
+		parents[cnt] = circuit(num_unit, population);
+		if (parents[cnt].validate_simple()) {   // if passes simple tests
+			parents[cnt].set_units();			// set the cuits within it
+			if (parents[cnt].validate_connected())  // if passes more complex tests
+				if (parents[cnt].evaluate())		// if it converges to a steady state
+					cnt++;
 		}
 	}
 
-	for (int it = 0; it < iterations; it++) {
-		iterate_alg(parents, children, population);
+		// initalise the children and set the desired parameters
+	for (int i = 0; i < population; i++) {
+		children[i] = circuit(num_unit, population);
+
+		children[i].cross_prob	= parents[i].cross_prob = cross_prob;
+		children[i].mutate_prob = parents[i].mutate_prob = mute_prob;
+		children[i].ppkg_gor	= parents[i].ppkg_gor = ppk_gorm;
+		children[i].ppkg_waste	= parents[i].ppkg_waste = ppk_waste;
+		children[i].ga_tol		= parents[i].ga_tol = ga_tol;
+		children[i].sim_tol		= parents[i].sim_tol = ga_tol;
+
 	}
 
-	cout << "WTF JUST HAPPEND\n";
+	for (int it = 0; it < iterations; it++) {
+			// iterate
+		iterate_alg(parents, children, population);
+			// swap parent and child list
+		circuit* tmp = parents;
+		parents = children;
+		children = tmp;
+	}
+	
+
+		// write the output IMPLEMENT ME!!x
+
+	cout << "algorithm finished\n";
 	system("pause");
 
 }

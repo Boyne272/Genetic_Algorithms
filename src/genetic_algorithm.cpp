@@ -60,6 +60,7 @@ void prep_parents(circuit* parents, circuit* best_child) {
 	
 		// artificially set the final value to be 1 incase of floating point issues
 	parents[population - 1].cfit = 1.;
+
 }
 
 
@@ -73,7 +74,7 @@ void pick_parents(circuit* parents, circuit* &father, circuit* &mother) {
 		// find the father
 	p1 = (double)rand() / (double)RAND_MAX;
 	for (int i = 0; i < population; i++) {
-		if (p1 < parents[i].cfit) {
+		if (p1 <= parents[i].cfit) {
 			father_index = i;
 			father = parents + i;
 			break;
@@ -84,14 +85,14 @@ void pick_parents(circuit* parents, circuit* &father, circuit* &mother) {
 			// find a mother
 		p2 = (double)rand() / (double)RAND_MAX;
 		for (int i = 0; i < population; i++) {
-			if (p2 < parents[i].cfit) {
+			if (p2 <= parents[i].cfit) {
 				mother_index = i;
 				mother = parents + i;
 				break;
 			}
 		}
 	} while (father_index == mother_index); // repeat if picked same parent
-	
+
 }
 
 
@@ -163,47 +164,47 @@ void breed(circuit *father, circuit *mother, circuit *child) {
 
 void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
 
-		// initalise the parents and childeren
-	const int pop = parents[0].population;
-
-
 		// find the cfit values for sampling parents and set the best child
 	prep_parents(parents, children);  // ISSUE in paralisation (only one node needs)
 		// recalculate best childs fiteness
 	children[0].set_units();
 	children[0].evaluate();
 
-	circuit* mom = nullptr;
-	circuit* dad = nullptr;  
+	circuit* mom;
+	circuit* dad;  
 	int index_1(1), index_2(2);
 	bool alive_1, alive_2;
 
 	// while we want two children
-	while (index_2 < pop) {
-
-		//cout << index_1 << " " << index_2 << "\n";
-
+	while (index_2 < child_len) {
+		
+			// reset parents to null for safety 
+		mom = nullptr;
+		dad = nullptr;
+		
 			// make the children
 		pick_parents(parents, mom, dad);
+
+
 		breed(mom, dad, children + index_1, children + index_2);
 		
 			// find if they survived
 
 			// child 1
 		alive_1 = false;
-		if (children[index_1].validate_simple()) {  // if passes simple tests
-			children[index_1].set_units();	// set the cuits within it
-			if (children[index_1].validate_connected()) {  // if passes more complex tests
-				alive_1 = children[index_1].evaluate();
+		if (children[index_1].validate_simple()) {			// if passes simple tests
+			children[index_1].set_units();					// set the cuits within it
+			if (children[index_1].validate_connected()) {	// if passes more complex tests
+				alive_1 = children[index_1].evaluate();		// chcek convergence and find value
 			}
 		}
 
 			// child 2
 		alive_2 = false;
-		if (children[index_2].validate_simple()) {  // if passes simple tests
-			children[index_2].set_units();	// set the cuits within it
-			if (children[index_2].validate_connected()) { // if passes more complex tests
-				alive_2 = children[index_2].evaluate();
+		if (children[index_2].validate_simple()) {			// if passes simple tests
+			children[index_2].set_units();					// set the cuits within it
+			if (children[index_2].validate_connected()) {	// if passes more complex tests
+				alive_2 = children[index_2].evaluate();		// chcek convergence and find value
 			}
 		}
 		
@@ -225,7 +226,7 @@ void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
 	}
 
 		// if we still need one child at the end
-	while (index_1 < pop) {
+	while (index_1 < child_len) {
 
 			// make a single child
 		pick_parents(parents, mom, dad);
@@ -241,7 +242,7 @@ void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
 
 			// if it survived break the loop
 		if (alive_1)
-			index_1 = pop;
+			index_1 = child_len;
 	}
 
 
@@ -254,9 +255,5 @@ void iterate_alg(circuit* &parents, circuit* &children, int child_len) {
 		cout << " value: " << children[0].fitness << "\n";
 	#endif // PRINT
 
-		// swap parent and child list
-	circuit* tmp = parents;
-	parents = children;
-	children = tmp;
 
 }
