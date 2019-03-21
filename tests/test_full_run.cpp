@@ -38,6 +38,10 @@ int main() {
 		// iterate
 	for (int it = 0; it < iterations; it++) {
 		iterate_alg(parents, children, population);
+			// swap parent and child list
+		circuit* tmp = parents;
+		parents = children;
+		children = tmp;
 	}
 
 		// check solution matches what is expected
