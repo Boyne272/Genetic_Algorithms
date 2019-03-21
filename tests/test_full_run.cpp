@@ -2,6 +2,7 @@
 #include "genetic_algorithm.h"
 #include "circuit.h"
 
+
 int main() {
 
 		// parameters to solve for
@@ -19,13 +20,13 @@ int main() {
 
 		// initalise the children
 	for (int i = 0; i < population; i++)
-		children[i] = circuit(num_unit);
+		children[i] = circuit(num_unit, population);
 
 
 		// initalise the parents and check find the fittness of them
 	int i = 0;
 	while (i < population) {
-		parents[i] = circuit(num_unit);
+		parents[i] = circuit(num_unit, population);
 
 		if (parents[i].validate_simple()) {  // if passes simple tests
 			parents[i].set_units();	// set the cuits within it
@@ -45,7 +46,8 @@ int main() {
 	}
 
 		// check solution matches what is expected
-	const double diff = abs(parents[0].fitness - 24.8126);
+	// changed to fabs.
+	const double diff = fabs(parents[0].fitness - 24.8162);
 	if (diff > 0.001) {
 		cout << "Failed full run test\n";
 		return -1;

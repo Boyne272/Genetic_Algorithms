@@ -11,7 +11,7 @@ public:
 	double ppkg_gor		= 100;		// price per kg gormanium
 	double ppkg_waste	= 500;		// cost per kg waste
 	double ga_tol		= 1000;		// IMPLEMENT ME!!!
-	double sim_tol		= 0.001;	// IMPLEMENT ME!!!
+	double sim_tol		= 1e-6;		// used as convergence tolerance // IMPLEMENTED.
 	
 		// SIMULATION VAIRABLES
 	int population;					// the total number of circuits
@@ -29,7 +29,7 @@ public:
 		// methods - setup
 	bool default_const = true;
 	circuit() {}  // default constructor
-	circuit(int num_node, int popultion);
+	circuit(int num_node, int pop = -1);
 	~circuit();
 
 		// methods - GA
@@ -44,4 +44,6 @@ public:
 	void step();
 	bool evaluate();
 	bool convergence_check(double tol);	
+		// methods - analysis
+	void analysis();
 };
