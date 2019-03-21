@@ -289,6 +289,10 @@ void circuit::analysis(string filename)
 		ofstream out_csv(filename);
 		out_csv << "Num_Node, Feed Gormanium, Feed Waste, PPKG Gormanium, PPKG Waste \n";
 		out_csv << num_node << "," << input_gor << "," << input_waste << "," << ppkg_gor << "," << ppkg_waste << "\n";
+		out_csv << "Concentrate gor amount, Concentrate waste amount\n";
+		out_csv << units[num_node].contents[0] << "," << units[num_node].contents[1] << "\n";
+		out_csv << "Tail gor amount, Tail waste amount\n";
+		out_csv << units[num_node + 1].contents[0] << "," << units[num_node + 1].contents[1] << "\n";
 
 
 
@@ -319,10 +323,7 @@ void circuit::analysis(string filename)
 		out_csv << max_id_list[1] << ",," << max_list[1] << ",\n";
 		out_csv << max_id_list[2] << ",,," << max_list[2] << "\n";
 
-		out_csv << "Concentrate gor amount, Concentrate waste amount\n";
-		out_csv << units[num_node].contents[0] << "," << units[num_node].contents[1] << "\n";
-		out_csv << "Tail gor amount, Tail waste amount\n";
-		out_csv << units[num_node + 1].contents[0] << "," << units[num_node + 1].contents[1] << "\n";
+		
 
 
 		out_csv.close();
