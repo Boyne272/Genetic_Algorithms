@@ -11,8 +11,6 @@ circuit::circuit(int num_node, int pop)
 
 		// setup the adjasency list and initalise it as random nodes
 	adjacency_list = new int[adj_list_length];
-	for (int i = 0; i < adj_list_length; i++)
-		adjacency_list[i] = rand() % (num_node + 2);
 	
 		// initalise the cunits (include the exit nodes too)
 	units = new cunit[num_node + 2];
@@ -20,21 +18,20 @@ circuit::circuit(int num_node, int pop)
 		units[i].num_node = num_node;
 		units[i].id = i;
 	}
+}
 
-		//default const reset
-	default_const = false;
-
+void circuit::killme() {
+	// this is need becuase for some reason if you overwirte one instance
+	// with a second instance the 1st deconstructor is called after the 2nd
+	// constructor, meaning that memory is immidiately killed after assigned
+	delete[] adjacency_list;
+	delete[] units;
 }
 
 
-
-circuit::~circuit()
-{
-	if (!true) {
-		// memory leak come fix me boy!!!!
-		//delete[] adjacency_list;
-		//delete[] units;
-	}
+void circuit::radomise() {
+	for (int i = 0; i < adj_list_length; i++)
+		this->adjacency_list[i] = rand() % (num_node + 2);
 }
 
 // -------------------------- validation ------------------------------
@@ -231,7 +228,7 @@ void circuit::mutate()
 	for (int i = 0; i < adj_list_length; i++) {
 		random = (double)rand() / RAND_MAX;
 		if (random < mutate_prob) {
-			random_change = rand() % (num_node + 2);  //////////////// at moment change to random value
+			random_change = rand() % (num_node + 2);
 			this->adjacency_list[i] = random_change;
 		}
 	}
@@ -239,96 +236,24 @@ void circuit::mutate()
 
 // ------------------------- analysis ------------------------------------
 
-void circuit::analysis(string filename)
-{
-	for (int i = 0; i < this->num_node; i++) {
-		// find the unit each pipe sends to and add the material sent by unit[i].
+void circuit::save(int iterations, ofstream &file) {
 
-		const int conc = (units[i].out_conc); // slow?
+	// headings for the save columns
+	// iterations, fitness, num_node, Concentrate gor amount, 
+	// Concentrate waste amount, Tail gor amount, Tail waste amount, ppk gor, ppk conc, config\n
 
-		units[conc].num_tot_feeds += 1;
-		units[conc].num_conc_feeds += 1;
+	file << iterations << ","
+		<< fitness << ","
+		<< num_node << ","
+		<< units[num_node].contents[0] << ","
+		<< units[num_node].contents[1] << ","
+		<< units[num_node + 1].contents[0] << ","
+		<< units[num_node + 1].contents[1] << ","
+		<< ppkg_gor << ","
+		<< ppkg_waste << ","
+		<< adjacency_list[0];
+	for (int i = 1; i < adj_list_length; i++)
+		file << "-" << adjacency_list[i];
+	file << "\n";
 
-		const int tail = (units[i].out_tail); // slow?
-
-		units[tail].num_tot_feeds += 1;
-		units[tail].num_tail_feeds += 1;
-	}
-
-	units[this->adjacency_list[0]].num_tot_feeds += 1; // accounting for origional feed.
-
-
-	// find max node. 
-	int max_list[]{ 0,0,0 }; // total, conc, tail
-	int max_id_list[]{ 0,0,0 };
-
-
-
-	if (filename == "print") {
-		for (int i = 0; i < this->num_node; i++) {
-			cout << "CELL: " << units[i].id << " Total: " << units[i].num_tot_feeds << " Conc: " << units[i].num_conc_feeds << " Tail: " << units[i].num_tail_feeds << endl;
-			if (units[i].num_tot_feeds > max_list[0]) {
-				max_list[0] = units[i].num_tot_feeds;
-				max_id_list[0] = units[i].id;
-			}
-			if (units[i].num_conc_feeds > max_list[1]) {
-				max_list[1] = units[i].num_conc_feeds;
-				max_id_list[1] = units[i].id;
-			}
-			if (units[i].num_tot_feeds > max_list[2]) {
-				max_list[2] = units[i].num_tail_feeds;
-				max_id_list[2] = units[i].id;
-			}
-
-		}
-	}
-
-	else {
-
-		// open files. 
-		ofstream out_csv(filename, ofstream::app);
-		out_csv << "Num_Node, Feed Gormanium, Feed Waste, PPKG Gormanium, PPKG Waste \n";
-		out_csv << num_node << "," << input_gor << "," << input_waste << "," << ppkg_gor << "," << ppkg_waste << "\n";
-		out_csv << "Concentrate gor amount, Concentrate waste amount\n";
-		out_csv << units[num_node].contents[0] << "," << units[num_node].contents[1] << "\n";
-		out_csv << "Tail gor amount, Tail waste amount\n";
-		out_csv << units[num_node + 1].contents[0] << "," << units[num_node + 1].contents[1] << "\n";
-
-
-
-		out_csv << "Cell id, Total Degree, Conc Degree, Tail Degree \n";
-
-
-		for (int i = 0; i < this->num_node; i++) {
-			//cout << "CELL: " << units[i].id << " Total: " << units[i].num_tot_feeds << " Conc: " << units[i].num_conc_feeds << " Tail: " << units[i].num_tail_feeds << endl;
-
-			out_csv << units[i].id << "," << units[i].num_tot_feeds << "," << units[i].num_conc_feeds << "," << units[i].num_tail_feeds << "\n";
-
-			if (units[i].num_tot_feeds > max_list[0]) {
-				max_list[0] = units[i].num_tot_feeds;
-				max_id_list[0] = units[i].id;
-			}
-			if (units[i].num_conc_feeds > max_list[1]) {
-				max_list[1] = units[i].num_conc_feeds;
-				max_id_list[1] = units[i].id;
-			}
-			if (units[i].num_tot_feeds > max_list[2]) {
-				max_list[2] = units[i].num_tail_feeds;
-				max_id_list[2] = units[i].id;
-			}
-
-		}
-		out_csv << "Cell id, Max Total Degree, Max Conc Degree, Max Tail Degree \n";
-		out_csv << max_id_list[0] << "," << max_list[0] << ",,\n";
-		out_csv << max_id_list[1] << ",," << max_list[1] << ",\n";
-		out_csv << max_id_list[2] << ",,," << max_list[2] << "\n";
-
-		
-
-
-		out_csv.close();
-
-
-	}
 }
-

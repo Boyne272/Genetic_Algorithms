@@ -8,46 +8,66 @@ int main() {
 		// parameters to solve for
 	const int population = 100;
 	const int num_unit	 = 5;
-	const int iterations = 2000;	// to be safe
+	const int iterations = 10000;	// to be safe
 	//srand(100);
 	srand(time(NULL));
 
 
-		// create the parents and children list
+	// create the parents and children list
 	circuit* parents = new circuit[population];
 	circuit* children = new circuit[population];
 
-
-		// initalise the children
-	for (int i = 0; i < population; i++)
+		// initalise the children and parents then set the desired parameters
+	for (int i = 0; i < population; i++) {
 		children[i] = circuit(num_unit, population);
-
-
-		// initalise the parents and check find the fittness of them
-	int i = 0;
-	while (i < population) {
 		parents[i] = circuit(num_unit, population);
+	}
 
-		if (parents[i].validate_simple()) {  // if passes simple tests
-			parents[i].set_units();	// set the cuits within it
-			if (parents[i].validate_connected())  // if passes more complex tests
-				if (parents[i].evaluate())
-					i++;
+
+		// randomise the parents genes, check they are valid and find their fittness 
+	int cnt = 0;
+	while (cnt < population) {
+		parents[cnt].radomise();
+		if (parents[cnt].validate_simple()) {   // if passes simple tests
+			parents[cnt].set_units();			// set the cuits within it
+			if (parents[cnt].validate_connected())  // if passes more complex tests
+				if (parents[cnt].evaluate())		// if it converges to a steady state
+					cnt++;
 		}
 	}
 
+
+		// vairables for convergence criteria
+	double old_best;
+	int count(1), it(0);
+
+		// iteration loop
+	while (it < iterations) {
+
+		// keep previous best
+		old_best = parents[0].fitness;
+
 		// iterate
-	for (int it = 0; it < iterations; it++) {
 		iterate_alg(parents, children, population);
-			// swap parent and child list
+		it++;
+
+		// check with previous beast
+		if (children[0].fitness != old_best)
+			count = 1;
+		else {
+			count++;
+			if (count == 2000)
+				break;
+		}
+
+		// swap parent and child list
 		circuit* tmp = parents;
 		parents = children;
 		children = tmp;
 	}
 
 		// check solution matches what is expected
-	// changed to fabs.
-	const double diff = fabs(parents[0].fitness - 24.8162);
+	const double diff = fabs(children[0].fitness - 24.8162);
 	if (diff > 0.001) {
 		cout << "Failed full run test\n";
 		return -1;

@@ -14,12 +14,7 @@ public:
 	double sim_tol		= 1e-6;		// used as convergence tolerance // IMPLEMENTED.
 	double input_gor	= 10;		// IMPLEMENT ME!!!
 	double input_waste  = 100;		// used as convergence tolerance // IMPLEMENTED.
-
-	// TODO
-	// input waste and gor as variables that can be changed,
-	// print out final waste and gor
 	
-
 
 		// SIMULATION VAIRABLES
 	int population;					// the total number of circuits
@@ -29,16 +24,18 @@ public:
 	double fitness;					// fitness value
 	cunit* units = nullptr;			// list of unit objects
 	
+
 		// GENETIC ALGORITHM VAIRABLES
 	double rfit = 0;        // relative fitness, the percentage of all fitness default 0
 	double cfit = 0;        // cumulative fitness default 0
 
 
 		// methods - setup
-	bool default_const = true;
-	circuit() {}  // default constructor
+	circuit() {}	// default constructor
+	~circuit() {}	// memory is handled through the kill me function
 	circuit(int num_node, int pop = -1);
-	~circuit();
+	void radomise();	// randomise genese for initial selection
+	void killme();		// manually delete memory due to reassignment issue
 
 		// methods - GA
 	void mutate();
@@ -52,6 +49,7 @@ public:
 	void step();
 	bool evaluate();
 	bool convergence_check(double tol);	
+
 		// methods - analysis
-	void analysis(string filename);
+	void save(int fitness, ofstream &file);
 };

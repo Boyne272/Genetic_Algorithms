@@ -50,8 +50,6 @@ int main(int argc, char *argv[]) {
 		out_name = argv[2];
 	}
 
-
-
 		// open config file
 	ifstream config;
 	config.open(config_name);
@@ -78,10 +76,23 @@ int main(int argc, char *argv[]) {
 	circuit* parents = new circuit[population];
 	circuit* children = new circuit[population];
 
-		// initalise the parents, check they are valid and find the fittness of them
+	// initalise the children and parents then set the desired parameters
+	for (int i = 0; i < population; i++) {
+		children[i] = circuit(num_unit, population);
+		parents[i] = circuit(num_unit, population);
+
+		children[i].cross_prob	= parents[i].cross_prob		= cross_prob;
+		children[i].mutate_prob = parents[i].mutate_prob	= mute_prob;
+		children[i].ppkg_gor	= parents[i].ppkg_gor		= ppk_gorm;
+		children[i].ppkg_waste	= parents[i].ppkg_waste		= ppk_waste;
+		children[i].ga_tol		= parents[i].ga_tol			= ga_tol;
+		children[i].sim_tol		= parents[i].sim_tol		= sim_tol;
+	}
+
+		// randomise the parents genes, check they are valid and find their fittness 
 	int cnt = 0;
 	while (cnt < population) {
-		parents[cnt] = circuit(num_unit, population);
+		parents[cnt].radomise();
 		if (parents[cnt].validate_simple()) {   // if passes simple tests
 			parents[cnt].set_units();			// set the cuits within it
 			if (parents[cnt].validate_connected())  // if passes more complex tests
@@ -90,22 +101,11 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-		// initalise the children and set the desired parameters
-	for (int i = 0; i < population; i++) {
-		children[i] = circuit(num_unit, population);
-
-		children[i].cross_prob	= parents[i].cross_prob		= cross_prob;
-		children[i].mutate_prob	= parents[i].mutate_prob	= mute_prob;
-		children[i].ppkg_gor	= parents[i].ppkg_gor		= ppk_gorm;
-		children[i].ppkg_waste	= parents[i].ppkg_waste		= ppk_waste;
-		children[i].ga_tol		= parents[i].ga_tol			= ga_tol;
-		children[i].sim_tol		= parents[i].sim_tol		= sim_tol;
-
-	}
-
-		// iterate with convergence criteria
+		// vairables for convergence criteria
 	double old_best;
 	int count(1), it(0);
+
+		// iteration loop
 	while (it < iterations) {
 
 			// keep previous best
@@ -132,21 +132,21 @@ int main(int argc, char *argv[]) {
 
 	cout << "finished iterating\n";
 
-		// write the output IMPLEMENT ME!!x
+		// write the output
 	ofstream file;
 	file.open(out_name, ofstream::app);
-	const int it_act = (it != iterations) ? it - ga_tol : it;
-	file << "Iterations Val,Iterations Act,Fitness\n"
-		<< it << "," << it_act << "," << old_best << "\n";
+	parents[0].save(it, file);
 	file.close();
-	parents[0].analysis(out_name);
 	cout << "wrote to file " << out_name << "\n";
 
-	/*cout << endl<<"algorithm finished at the " << final_iteration << "th iteration\n";
-	cout << "the fitness value of optimum circuit: " << children[0].fitness << endl;
-	cout << endl<<"Parameters: "<<endl<<"maximum iterations: " << iterations << endl;
-	cout << "population size: " << population << endl;
-	cout << "num_units: " << num_unit << endl;*/
+		// clean memory with workaround kill function
+	for (int i = 0; i < population; i++) {
+		children[i].killme();
+		parents[i].killme();
+	}
+	delete[] children;
+	delete[] parents;
+
 	system("pause");
 
 }
