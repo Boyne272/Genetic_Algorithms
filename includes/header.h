@@ -15,6 +15,4 @@
 #include <cmath>		// fabs function
 #include <cstdlib>		// what is this for?????
 
-#include <mpi.h>
-
 using namespace std;

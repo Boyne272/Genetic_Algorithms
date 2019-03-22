@@ -1,6 +1,7 @@
 #include "header.h"
 #include "genetic_algorithm.h"
 #include "circuit.h"
+#include "header.h"
 
 #define PRINT
 
@@ -159,6 +160,8 @@ int main(int argc, char *argv[]) {
 	gene_length = 2 * num_unit + 1;
 	find_distribution(population, p, id, my_pop, my_start);
 
+	int offset = (id == 0) ? 0 : 1;
+
 	#ifdef PRINT
 		cout << id << "-info(pop=" << my_pop << " gene_length=" << gene_length << ")\n";
 		cout.flush();
@@ -198,7 +201,7 @@ int main(int argc, char *argv[]) {
 
 		// create the parents and children list
 	circuit* parents = new circuit[population];
-	circuit* children = new circuit[my_pop];
+	circuit* children = new circuit[my_pop + offset];
 
 		// initalise the parents then set the desired parameters
 	for (int i = 0; i < population; i++) {
@@ -214,7 +217,7 @@ int main(int argc, char *argv[]) {
 
 
 		// initalise the children then set the desired parameters
-	for (int i = 0; i < my_pop; i++) {
+	for (int i = 0; i < my_pop + offset; i++) {
 		children[i] = circuit(num_unit, population);
 
 		children[i].cross_prob	= cross_prob;
@@ -242,8 +245,8 @@ int main(int argc, char *argv[]) {
 
 
 		// gather the information to be sent
-	gather_fitness(fitness_list, children, my_pop);
-	gather_genes(gene_list, gene_length, children, my_pop);
+	gather_fitness(fitness_list, children + offset, my_pop);
+	gather_genes(gene_list, gene_length, children + offset, my_pop);
 
 	#ifdef PRINT
 		cout << id << "-preping_to_send_children\n";
@@ -288,7 +291,7 @@ int main(int argc, char *argv[]) {
 			cout << id << "-iterate(starting)\n";
 			cout.flush();
 		#endif // PRINT
-		iterate_alg(parents, children, my_pop);
+		iterate_alg(parents, children, my_pop + offset);
 		it++;
 		#ifdef PRINT
 			cout << id << "-iterate(ending)\n";
@@ -301,8 +304,8 @@ int main(int argc, char *argv[]) {
 			// send children to become parents
 
 			// gather the information to be sent
-		gather_fitness(fitness_list, children, my_pop);
-		gather_genes(gene_list, gene_length, children, my_pop);
+		gather_fitness(fitness_list, children + offset, my_pop);
+		gather_genes(gene_list, gene_length, children + offset, my_pop);
 
 		#ifdef PRINT
 			cout << id << "-preping_to_send_children(" << it << ")\n";

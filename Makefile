@@ -17,6 +17,8 @@ TEST_BIN_DIR = $(TEST_DIR)/bin
 ALL_TEST_BUILD_DIR = $(TEST_BUILD_DIR) $(TEST_BIN_DIR)
 
 
+
+
 # ------------------------------- Build ----------------------------------
 
 # this is run when make is called without arguments 
@@ -36,6 +38,18 @@ clean:
 
 # make clean run regardless of the presense of any files
 .PHONY: Genetic_Algorithm all clean
+
+
+# ------------------------------- Parallel ----------------------------------
+
+parallel: $(BIN_DIR)/Genetic_Algorithm_Parallel
+
+$(BIN_DIR)/Genetic_Algorithm_Parallel: $(BUILD_DIR)/main_parallel.o $(BUILD_DIR)/genetic_algorithm.o $(BUILD_DIR)/cunit.o $(BUILD_DIR)/circuit.o 
+	$(CXX) -o $@ $^
+
+
+$(BUILD_DIR)/main_parallel.o: $(SOURCE_DIR)/main_parallel.cpp $(INCLUDE_DIR)/*.h | directories
+	mpicxx $(CPPFLAGS) -o $@ -c $< $(CXXFLAGS) -I $(INCLUDE_DIR)
 
 
 # ------------------------------- Tests ----------------------------------
