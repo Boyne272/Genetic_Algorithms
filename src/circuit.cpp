@@ -136,10 +136,7 @@ void circuit::step() {
 		// for each node, including the outputs
 	for (int i = 0; i < this->num_node + 2; i++) {
 
-		// PUT IN CALC YIELD 
-		// copies the current contents into the old contents - this is used for convergence checks. 
-		// and prepares the sending buffer contents.
-		// resets current contents to 0, ready to recieve from the other cells.
+		// calcs the yeild for this step by flowing fluid through all the pipes 
 		units[i].calc_yield();
 	}
 
@@ -154,7 +151,7 @@ void circuit::step() {
 		units[conc].contents[0] += units[i].conc_send[0];
 		units[conc].contents[1] += units[i].conc_send[1];
 
-		const int tail = (units[i].out_tail); // slow?
+		const int tail = (units[i].out_tail); 
 
 		units[tail].contents[0] += units[i].tail_send[0];
 		units[tail].contents[1] += units[i].tail_send[1];
@@ -164,7 +161,7 @@ void circuit::step() {
 bool circuit::evaluate() {
 	// main evaluation loop.
 	// limit is maximum number of iterations if no convergence. 
-	int limit = 20000;
+	int limit = 20000;  // limit is maximum number of iterations if no convergence. 
 	int count = 0;
 	double tolerance = sim_tol;
 	bool converged = false;
@@ -236,7 +233,7 @@ void circuit::mutate()
 
 // ------------------------- analysis ------------------------------------
 
-void circuit::save(int iterations, ofstream &file) {
+void circuit::save(int iterations, ofstream &file, string additional) {
 
 	// headings for the save columns
 	// iterations, fitness, num_node, Concentrate gor amount, 
@@ -254,6 +251,6 @@ void circuit::save(int iterations, ofstream &file) {
 		<< adjacency_list[0];
 	for (int i = 1; i < adj_list_length; i++)
 		file << "-" << adjacency_list[i];
-	file << "\n";
+	file << "," << additional << "\n";
 
 }

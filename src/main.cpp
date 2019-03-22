@@ -115,19 +115,19 @@ int main(int argc, char *argv[]) {
 		iterate_alg(parents, children, population);
 		it++;
 
+			// swap parent and child list
+		circuit* tmp = parents;
+		parents = children;
+		children = tmp;
+
 			// check with previous beast
-		if (children[0].fitness != old_best) 
+		if (parents[0].fitness != old_best) 
 			count = 1;
 		else {
 			count++;
 			if (count == ga_tol)
 				break;
 		}
-
-			// swap parent and child list
-		circuit* tmp = parents;
-		parents = children;
-		children = tmp;
 	}
 
 	cout << "finished iterating\n";
