@@ -6,7 +6,7 @@ acse-4-project-3-copper created by GitHub Classroom
 In this project we are going to restrict ourselves to both units and an overall circuit that produces
 two products (streams), namely a concentrate stream and a tailings stream. We use a genetic algorithm to get the optimal circuit.
 
-<img width="393" alt="probspec2" src="https://user-images.githubusercontent.com/43916396/54817497-06d27180-4c8f-11e9-9146-56f9fb233570.png">
+<img width="393" alt="10 node circuit" src="HPC/optimum_10.PNG">
 
 # Installation
 
