@@ -8,7 +8,7 @@ This project involved writing a C++ implementation of a Genetic Algorithm optimi
 # About The Problem
 For the refinement of mined minerals individual units which separate waste (tailings) and desired product (concentrate) with a given efficiency have to be configured in a circuit for optimal product quantity vs quality (given by a relevant cost function). For the given cost function a 10 unit circuit has the following optimal configuration:
 
-<img width="393" alt="10 node circuit" src="HPC/optimum_10.PNG">
+<img width="800" alt="10 node circuit" src="HPC/optimum_10.PNG">
 
 
 # Repository Structure
